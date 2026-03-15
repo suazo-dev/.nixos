@@ -163,10 +163,10 @@
                 {
                     "clockColor": "none",
                     "customFont": "",
-                    "formatHorizontal": "HH:mm ddd, MMM dd",
-                    "formatVertical": "HH mm - dd MM",
+                    "formatHorizontal": "h:mm AP ddd MMM d",
+                    "formatVertical": "h:mm AP ddd MMM d",
                     "id": "Clock",
-                    "tooltipFormat": "HH:mm ddd, MMM dd",
+                    "tooltipFormat": "h:mm AP ddd MMM d",
                     "useCustomFont": false
                 },
                 {
