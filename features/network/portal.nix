@@ -1,0 +1,6 @@
+{
+  components = [
+    "networkmanager"
+    "iwd"
+  ];
+}

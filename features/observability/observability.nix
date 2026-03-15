@@ -1,0 +1,5 @@
+{
+  components = [
+    "net-debug-tools"
+  ];
+}

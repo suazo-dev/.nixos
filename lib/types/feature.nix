@@ -1,0 +1,6 @@
+{
+  allowedKeys = [
+    "features"
+    "components"
+  ];
+}

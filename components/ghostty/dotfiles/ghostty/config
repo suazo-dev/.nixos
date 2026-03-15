@@ -1,0 +1,32 @@
+# ~/.config/ghostty/config
+
+font-family = JetBrainsMono Nerd Font
+font-size = 10
+gtk-titlebar = false
+scrollback-limit = 1000000
+
+
+
+background = #000000
+foreground = #cdd6f4
+cursor-color = #f5e0dc
+selection-background = #181825
+selection-foreground = #cdd6f4
+
+# ANSI Colors
+palette = 0=#181825
+palette = 1=#f38ba8
+palette = 2=#a6e3a1
+palette = 3=#f9e2af
+palette = 4=#89b4fa
+palette = 5=#cba6f7
+palette = 6=#94e2d5
+palette = 7=#bac2de
+palette = 8=#585b70
+palette = 9=#f38ba8
+palette = 10=#a6e3a1
+palette = 11=#f9e2af
+palette = 12=#89b4fa
+palette = 13=#cba6f7
+palette = 14=#94e2d5
+palette = 15=#cdd6f4
