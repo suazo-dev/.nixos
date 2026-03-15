@@ -12,6 +12,7 @@
       enable = true;
 
       settings.vim = {
+        # ── Vim core settings ───────────────────────────────────
         viAlias = true;
         vimAlias = true;
         syntaxHighlighting = true;
@@ -26,15 +27,13 @@
           wrap = false;
           termguicolors = true;
           clipboard = "unnamedplus";
-          mousemoveevent = true;
+          mousemoveevent = true; # needed for bufferline hover
         };
 
+        # ── Theme ───────────────────────────────────────────────
+        # We disable nvf's built-in theme and handle it ourselves
+        # via extraPlugins + luaConfigRC for full control
         theme.enable = false;
-
-        globals = {
-          mapleader = " ";
-          maplocalleader = "\\";
-        };
 
         extraPlugins = {
           catppuccin = {
@@ -61,14 +60,25 @@
           lualine = {
             package = pkgs.vimPlugins.lualine-nvim;
           };
+          alpha-nvim = {
+            package = pkgs.vimPlugins.alpha-nvim;
+          };
         };
 
+        # ── Telescope ───────────────────────────────────────────
         telescope.enable = true;
+
+        # ── File tree ───────────────────────────────────────────
         filetree.neo-tree.enable = true;
+
+        # ── Which-key ───────────────────────────────────────────
         binds.whichKey.enable = true;
 
+        # ── Statusline ──────────────────────────────────────────
+        # Handled in luaConfigRC for full control over sections
         statusline.lualine.enable = false;
 
+        # ── Bufferline (tab bar) ────────────────────────────────
         tabline.nvimBufferline = {
           enable = true;
           setupOpts = {
@@ -90,6 +100,7 @@
           };
         };
 
+        # ── Git ─────────────────────────────────────────────────
         git = {
           enable = true;
           gitsigns = {
@@ -114,6 +125,7 @@
           };
         };
 
+        # ── LSP ─────────────────────────────────────────────────
         lsp = {
           enable = true;
           formatOnSave = true;
@@ -121,6 +133,7 @@
           lspkind.enable = true;
         };
 
+        # ── Autocomplete (blink.cmp) ────────────────────────────
         autocomplete.blink-cmp = {
           enable = true;
           setupOpts = {
@@ -129,11 +142,6 @@
               "<C-n>" = ["select_next"];
               "<C-p>" = ["select_prev"];
             };
-
-            signature = {
-              enabled = true;
-            };
-
             completion = {
               documentation = {
                 auto_show = true;
@@ -151,6 +159,10 @@
           };
         };
 
+        # ── Signature help ──────────────────────────────────────
+        lsp.lspSignature.enable = false;
+
+        # ── Snacks + Smart-splits ────────────────────────────────
         utility = {
           snacks-nvim = {
             enable = true;
@@ -160,24 +172,18 @@
               quickfile.enabled = true;
               indent.enabled = true;
               scroll.enabled = true;
-              dashboard = {
-                enabled = true;
-                sections = [
-                  {section = "header";}
-                  {
-                    section = "keys";
-                    gap = 1;
-                    padding = 1;
-                  }
-                  {section = "startup";}
-                ];
-              };
+              dashboard.enabled = false;
             };
           };
 
           smart-splits.enable = true;
         };
 
+        # ── Dashboard ────────────────────────────────────────────
+        # Handled in luaConfigRC for full LazyVim-style layout
+        dashboard.alpha.enable = false;
+
+        # ── Visuals ─────────────────────────────────────────────
         visuals = {
           nvim-web-devicons.enable = true;
           highlight-undo.enable = true;
@@ -185,16 +191,19 @@
           indentBlankline.enable = true;
         };
 
+        # ── Debugger (DAP) ──────────────────────────────────────
         debugger.nvim-dap = {
           enable = true;
           ui.enable = true;
         };
 
+        # ── UI borders ──────────────────────────────────────────
         ui.borders = {
           enable = true;
           globalStyle = "rounded";
         };
 
+        # ── Languages ───────────────────────────────────────────
         languages = {
           enableTreesitter = true;
           enableFormat = true;
@@ -243,9 +252,54 @@
             };
             treesitter.enable = true;
           };
+
+          # nvf may not have a built-in gleam module,
+          # so we handle it in luaConfigRC if needed
         };
 
+        # ── Lua config (theme + extra plugin setup) ─────────────
+        luaConfigRC.dashboard = ''
+          local alpha = require("alpha")
+          local dashboard = require("alpha.themes.dashboard")
+
+          local logo = [[
+
+          ███████╗██╗   ██╗ █████╗ ███████╗ ██████╗
+          ██╔════╝██║   ██║██╔══██╗╚══███╔╝██╔═══██╗
+          ███████╗██║   ██║███████║  ███╔╝ ██║   ██║
+          ╚════██║██║   ██║██╔══██║ ███╔╝  ██║   ██║
+          ███████║╚██████╔╝██║  ██║███████╗╚██████╔╝
+          ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝
+
+          ]]
+
+          dashboard.section.header.val = vim.split(logo, "\n")
+
+          dashboard.section.buttons.val = {
+            dashboard.button("f", " " .. " Find file",       "<cmd>Telescope find_files<cr>"),
+            dashboard.button("n", " " .. " New file",        "<cmd>ene <BAR> startinsert<cr>"),
+            dashboard.button("r", " " .. " Recent files",    "<cmd>Telescope oldfiles<cr>"),
+            dashboard.button("g", " " .. " Find text",       "<cmd>Telescope live_grep<cr>"),
+            dashboard.button("c", " " .. " Config",          "<cmd>e ~/.nixos/components/nvf/nvf.nix<cr>"),
+            dashboard.button("q", " " .. " Quit",            "<cmd>qa<cr>"),
+          }
+
+          for _, button in ipairs(dashboard.section.buttons.val) do
+            button.opts.hl = "AlphaButtons"
+            button.opts.hl_shortcut = "AlphaShortcut"
+          end
+
+          dashboard.section.header.opts.hl = "AlphaHeader"
+          dashboard.section.buttons.opts.hl = "AlphaButtons"
+          dashboard.section.footer.opts.hl = "AlphaFooter"
+
+          dashboard.opts.layout[1].val = 8
+
+          alpha.setup(dashboard.opts)
+        '';
+
         luaConfigRC.theme = ''
+          -- Catppuccin with AMOLED black
           require("catppuccin").setup({
             flavour = "mocha",
             color_overrides = {
@@ -279,11 +333,11 @@
               snacks = true,
             },
           })
-
           vim.cmd.colorscheme("catppuccin")
         '';
 
         luaConfigRC.lualine-custom = ''
+          -- Lualine with custom separators
           require("lualine").setup({
             options = {
               theme = "auto",
@@ -310,15 +364,20 @@
         '';
 
         luaConfigRC.extra-plugins = ''
+          -- smear-cursor
           require("smear_cursor").setup({
             stiffness = 0.8,
             trailing_stiffness = 0.5,
             distance_stop_animating = 0.5,
           })
 
+          -- mini.pairs (auto close brackets)
           require("mini.pairs").setup()
+
+          -- mini.ai (extended text objects)
           require("mini.ai").setup()
 
+          -- harpoon
           local harpoon = require("harpoon")
           harpoon:setup()
           vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, { desc = "Harpoon add" })
@@ -328,6 +387,7 @@
           vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end, { desc = "Harpoon 3" })
           vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end, { desc = "Harpoon 4" })
 
+          -- statuscol (custom sign/fold/number column)
           local builtin = require("statuscol.builtin")
           require("statuscol").setup({
             relculright = true,
@@ -338,17 +398,23 @@
             },
           })
 
+          -- lsp-endhints (inlay hints at end of line)
+
+          -- diffview
           require("diffview").setup({
             enhanced_diff_hl = true,
           })
 
+          -- Rounded winborder
           vim.opt.winborder = "rounded"
 
-          vim.keymap.set("n", "<leader>e", "<cmd>Neotree filesystem reveal left<cr>", { desc = "Explorer" })
+          -- Keymaps
+          vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<cr>", { desc = "Toggle explorer" })
           vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "LSP hover" })
           vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Diffview open" })
           vim.keymap.set("n", "<leader>gD", "<cmd>DiffviewClose<cr>", { desc = "Diffview close" })
 
+          -- Buffer navigation (matches bufferline)
           vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
           vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
           vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Close buffer" })
