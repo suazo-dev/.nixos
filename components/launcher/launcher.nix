@@ -4,7 +4,9 @@
     pkgs.wofi
   ];
 
-  home-manager.users.${spec.user} = lib.mkIf (!spec.facts.headless) ({ ... }: {
-    xdg.configFile."wofi".source = ./dotfiles/wofi;
+  home-manager.users.${spec.user} = lib.mkIf (!spec.facts.headless) ({ config, ... }: {
+    xdg.configFile."wofi".source = 
+      config.lib.file.mkOutOfStoreSymlink
+        "/home/${spec.user}/.nixos/components/launcher/dotfiles/wofi";
   });
 }
