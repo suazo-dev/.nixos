@@ -50,7 +50,7 @@
         "displayMode": "always_visible",
         "enableExclusionZoneInset": true,
         "floating": false,
-        "fontScale": 1,
+        "fontScale": 1.1099999999999999,
         "frameRadius": 12,
         "frameThickness": 8,
         "hideOnOverview": false,
@@ -71,7 +71,7 @@
         "rightClickFollowMouse": true,
         "screenOverrides": [
         ],
-        "showCapsule": false,
+        "showCapsule": true,
         "showOnWorkspaceSwitch": true,
         "showOutline": false,
         "useSeparateOpacity": true,
