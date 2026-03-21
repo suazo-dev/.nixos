@@ -460,8 +460,8 @@ binds {
 
     Mod+Ctrl+Left { set-column-width "-10%"; }
     Mod+Ctrl+Right { set-column-width "+10%"; }
-    Mod+Ctrl+Down { set-window-height "-10%"; }
-    Mod+Ctrl+Up { set-window-height "+10%"; }
+    Mod+Ctrl+Up { set-window-height "-10%"; }
+    Mod+Ctrl+Down { set-window-height "+10%"; }
 
     Mod+Ctrl+Period { maximize-column; }
     Mod+Ctrl+Comma { expand-column-to-available-width; }
