@@ -7,5 +7,7 @@
     "c-toolchain"
     "gleam-toolchain"
     "mojo-toolchain"
+    "zed-editor"
+    "opencode"
   ];
 }

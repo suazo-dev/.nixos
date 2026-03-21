@@ -3,15 +3,30 @@
   home-manager.users.${spec.user} = lib.mkIf (!spec.facts.headless) ({ ... }: {
     gtk = {
       enable = true;
+
       theme = {
         name = "Adwaita-dark";
         package = pkgs.gnome-themes-extra;
       };
+
+      iconTheme = {
+        name = "Papirus";
+        package = pkgs.papirus-icon-theme;
+      };
+
       cursorTheme = {
         name = spec.facts.theme.cursor.name;
         package = pkgs.bibata-cursors;
         size = spec.facts.theme.cursor.size;
       };
+    };
+
+    home.pointerCursor = {
+      gtk.enable = true;
+      x11.enable = true;
+      package = pkgs.bibata-cursors;
+      name = spec.facts.theme.cursor.name;
+      size = spec.facts.theme.cursor.size;
     };
 
     home.sessionVariables = {
