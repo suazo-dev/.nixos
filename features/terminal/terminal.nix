@@ -9,5 +9,6 @@
     "cli-extras"
     "yazi"
     "ghostty"
+    "fastfetch"
   ];
 }

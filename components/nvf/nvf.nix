@@ -12,7 +12,6 @@
       enable = true;
 
       settings.vim = {
-        # ── Vim core settings ───────────────────────────────────
         viAlias = true;
         vimAlias = true;
         syntaxHighlighting = true;
@@ -20,6 +19,7 @@
         options = {
           number = true;
           relativenumber = true;
+          signcolumn = "yes";
           expandtab = true;
           shiftwidth = 2;
           tabstop = 2;
@@ -27,13 +27,20 @@
           wrap = false;
           termguicolors = true;
           clipboard = "unnamedplus";
-          mousemoveevent = true; # needed for bufferline hover
+          mouse = "a";
+          mousemoveevent = true;
+          updatetime = 250;
+          timeoutlen = 400;
+          splitbelow = true;
+          splitright = true;
+          cursorline = true;
         };
 
-        # ── Theme ───────────────────────────────────────────────
-        # We disable nvf's built-in theme and handle it ourselves
-        # via extraPlugins + luaConfigRC for full control
         theme.enable = false;
+        telescope.enable = false;
+        filetree.neo-tree.enable = false;
+        binds.whichKey.enable = true;
+        statusline.lualine.enable = false;
 
         extraPlugins = {
           catppuccin = {
@@ -63,22 +70,14 @@
           alpha-nvim = {
             package = pkgs.vimPlugins.alpha-nvim;
           };
+          oil = {
+            package = pkgs.vimPlugins.oil-nvim;
+          };
+          fzf-lua = {
+            package = pkgs.vimPlugins.fzf-lua;
+          };
         };
 
-        # ── Telescope ───────────────────────────────────────────
-        telescope.enable = true;
-
-        # ── File tree ───────────────────────────────────────────
-        filetree.neo-tree.enable = true;
-
-        # ── Which-key ───────────────────────────────────────────
-        binds.whichKey.enable = true;
-
-        # ── Statusline ──────────────────────────────────────────
-        # Handled in luaConfigRC for full control over sections
-        statusline.lualine.enable = false;
-
-        # ── Bufferline (tab bar) ────────────────────────────────
         tabline.nvimBufferline = {
           enable = true;
           setupOpts = {
@@ -88,19 +87,10 @@
               show_buffer_close_icons = false;
               show_close_icon = false;
               separator_style = "thin";
-              offsets = [
-                {
-                  filetype = "neo-tree";
-                  text = "Explorer";
-                  highlight = "Directory";
-                  text_align = "left";
-                }
-              ];
             };
           };
         };
 
-        # ── Git ─────────────────────────────────────────────────
         git = {
           enable = true;
           gitsigns = {
@@ -125,44 +115,103 @@
           };
         };
 
-        # ── LSP ─────────────────────────────────────────────────
         lsp = {
           enable = true;
           formatOnSave = true;
           lightbulb.enable = true;
           lspkind.enable = true;
+          lspSignature.enable = false;
         };
 
-        # ── Autocomplete (blink.cmp) ────────────────────────────
         autocomplete.blink-cmp = {
           enable = true;
           setupOpts = {
             keymap = {
-              "<C-Space>" = ["show"];
+              "<C-Space>" = ["show" "show_documentation" "hide_documentation"];
               "<C-n>" = ["select_next"];
               "<C-p>" = ["select_prev"];
+              "<C-f>" = ["scroll_documentation_down"];
+              "<C-b>" = ["scroll_documentation_up"];
+              "<Tab>" = ["select_next" "fallback"];
+              "<S-Tab>" = ["select_prev" "fallback"];
+              "<CR>" = ["accept" "fallback"];
+              "<C-e>" = ["hide" "cancel"];
             };
+
             completion = {
+              trigger = {
+                show_on_keyword = true;
+                show_on_trigger_character = true;
+                show_on_insert = false;
+              };
+
+              list = {
+                selection = {
+                  preselect = true;
+                  auto_insert = false;
+                };
+              };
+
+              menu = {
+                enabled = true;
+                auto_show = true;
+                auto_show_delay_ms = 0;
+                min_width = 32;
+                max_height = 14;
+                border = "rounded";
+                scrollbar = true;
+                direction_priority = ["s" "n"];
+                draw = {
+                  padding = 1;
+                  gap = 1;
+                  columns = [
+                    ["kind_icon"]
+                    ["label" "label_description"]
+                    ["kind"]
+                  ];
+                };
+              };
+
               documentation = {
                 auto_show = true;
-                auto_show_delay_ms = 200;
+                auto_show_delay_ms = 120;
+                update_delay_ms = 50;
                 window = {
+                  min_width = 20;
+                  max_width = 88;
+                  max_height = 24;
                   border = "rounded";
+                  scrollbar = true;
                 };
               };
-              menu = {
-                draw = {
-                  padding = 0;
-                };
+
+              ghost_text = {
+                enabled = true;
+                show_with_selection = true;
+                show_without_selection = false;
+                show_with_menu = true;
+                show_without_menu = false;
               };
+            };
+
+            signature = {
+              enabled = true;
+              window = {
+                border = "rounded";
+              };
+            };
+
+            appearance = {
+              use_nvim_cmp_as_default = false;
+              nerd_font_variant = "mono";
+            };
+
+            sources = {
+              default = ["lsp" "path" "snippets" "buffer"];
             };
           };
         };
 
-        # ── Signature help ──────────────────────────────────────
-        lsp.lspSignature.enable = false;
-
-        # ── Snacks + Smart-splits ────────────────────────────────
         utility = {
           snacks-nvim = {
             enable = true;
@@ -179,11 +228,8 @@
           smart-splits.enable = true;
         };
 
-        # ── Dashboard ────────────────────────────────────────────
-        # Handled in luaConfigRC for full LazyVim-style layout
         dashboard.alpha.enable = false;
 
-        # ── Visuals ─────────────────────────────────────────────
         visuals = {
           nvim-web-devicons.enable = true;
           highlight-undo.enable = true;
@@ -191,19 +237,16 @@
           indentBlankline.enable = true;
         };
 
-        # ── Debugger (DAP) ──────────────────────────────────────
         debugger.nvim-dap = {
           enable = true;
           ui.enable = true;
         };
 
-        # ── UI borders ──────────────────────────────────────────
         ui.borders = {
           enable = true;
           globalStyle = "rounded";
         };
 
-        # ── Languages ───────────────────────────────────────────
         languages = {
           enableTreesitter = true;
           enableFormat = true;
@@ -235,7 +278,7 @@
             enable = true;
             lsp = {
               enable = true;
-              servers = ["ruff" "ty"];
+              servers = ["basedpyright" "ruff"];
             };
             treesitter.enable = true;
             format = {
@@ -253,11 +296,13 @@
             treesitter.enable = true;
           };
 
-          # nvf may not have a built-in gleam module,
-          # so we handle it in luaConfigRC if needed
+          gleam = {
+            enable = true;
+            lsp.enable = true;
+            treesitter.enable = true;
+          };
         };
 
-        # ── Lua config (theme + extra plugin setup) ─────────────
         luaConfigRC.dashboard = ''
           local alpha = require("alpha")
           local dashboard = require("alpha.themes.dashboard")
@@ -276,12 +321,12 @@
           dashboard.section.header.val = vim.split(logo, "\n")
 
           dashboard.section.buttons.val = {
-            dashboard.button("f", " " .. " Find file",       "<cmd>Telescope find_files<cr>"),
-            dashboard.button("n", " " .. " New file",        "<cmd>ene <BAR> startinsert<cr>"),
-            dashboard.button("r", " " .. " Recent files",    "<cmd>Telescope oldfiles<cr>"),
-            dashboard.button("g", " " .. " Find text",       "<cmd>Telescope live_grep<cr>"),
-            dashboard.button("c", " " .. " Config",          "<cmd>e ~/.nixos/components/nvf/nvf.nix<cr>"),
-            dashboard.button("q", " " .. " Quit",            "<cmd>qa<cr>"),
+            dashboard.button("f", " " .. " Files",        "<cmd>FzfLua files<cr>"),
+            dashboard.button("g", " " .. " Grep",         "<cmd>FzfLua live_grep<cr>"),
+            dashboard.button("r", " " .. " Recent files", "<cmd>FzfLua oldfiles<cr>"),
+            dashboard.button("o", " " .. " Oil float",    "<cmd>Oil --float<cr>"),
+            dashboard.button("c", " " .. " Config",       "<cmd>e ~/.nixos/components/nvf/nvf.nix<cr>"),
+            dashboard.button("q", " " .. " Quit",         "<cmd>qa<cr>"),
           }
 
           for _, button in ipairs(dashboard.section.buttons.val) do
@@ -292,14 +337,12 @@
           dashboard.section.header.opts.hl = "AlphaHeader"
           dashboard.section.buttons.opts.hl = "AlphaButtons"
           dashboard.section.footer.opts.hl = "AlphaFooter"
-
           dashboard.opts.layout[1].val = 8
 
           alpha.setup(dashboard.opts)
         '';
 
         luaConfigRC.theme = ''
-          -- Catppuccin with AMOLED black
           require("catppuccin").setup({
             flavour = "mocha",
             color_overrides = {
@@ -314,8 +357,6 @@
               lualine = true,
               gitsigns = true,
               treesitter = true,
-              telescope = { enabled = true },
-              neotree = true,
               native_lsp = {
                 enabled = true,
                 underlines = {
@@ -337,7 +378,6 @@
         '';
 
         luaConfigRC.lualine-custom = ''
-          -- Lualine with custom separators
           require("lualine").setup({
             options = {
               theme = "auto",
@@ -345,7 +385,7 @@
               section_separators = { left = "", right = "" },
               globalstatus = true,
               disabled_filetypes = {
-                statusline = { "dashboard", "snacks_dashboard" },
+                statusline = { "dashboard", "snacks_dashboard", "oil" },
               },
             },
             sections = {
@@ -364,22 +404,18 @@
         '';
 
         luaConfigRC.extra-plugins = ''
-          -- smear-cursor
           require("smear_cursor").setup({
             stiffness = 0.8,
             trailing_stiffness = 0.5,
             distance_stop_animating = 0.5,
           })
 
-          -- mini.pairs (auto close brackets)
           require("mini.pairs").setup()
-
-          -- mini.ai (extended text objects)
           require("mini.ai").setup()
 
-          -- harpoon
           local harpoon = require("harpoon")
           harpoon:setup()
+
           vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, { desc = "Harpoon add" })
           vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon menu" })
           vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end, { desc = "Harpoon 1" })
@@ -387,7 +423,6 @@
           vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end, { desc = "Harpoon 3" })
           vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end, { desc = "Harpoon 4" })
 
-          -- statuscol (custom sign/fold/number column)
           local builtin = require("statuscol.builtin")
           require("statuscol").setup({
             relculright = true,
@@ -398,26 +433,140 @@
             },
           })
 
-          -- lsp-endhints (inlay hints at end of line)
-
-          -- diffview
           require("diffview").setup({
             enhanced_diff_hl = true,
           })
 
-          -- Rounded winborder
+          require("oil").setup({
+            default_file_explorer = false,
+            columns = { "icon" },
+            delete_to_trash = true,
+            skip_confirm_for_simple_edits = true,
+            prompt_save_on_select_new_entry = true,
+            view_options = {
+              show_hidden = true,
+            },
+            float = {
+              padding = 2,
+              max_width = 100,
+              max_height = 30,
+              border = "rounded",
+              win_options = {
+                winblend = 0,
+              },
+            },
+            keymaps = {
+              ["<Esc>"] = { "actions.close", mode = "n" },
+              ["q"] = "actions.close",
+              ["<CR>"] = "actions.select",
+              ["-"] = "actions.parent",
+              ["_"] = "actions.open_cwd",
+              ["g."] = "actions.toggle_hidden",
+            },
+          })
+
+          require("fzf-lua").setup({
+            winopts = {
+              height = 0.80,
+              width = 0.85,
+              row = 0.35,
+              col = 0.50,
+              border = "rounded",
+              preview = {
+                border = "rounded",
+                layout = "vertical",
+                vertical = "down:45%",
+              },
+            },
+            fzf_opts = {
+              ["--layout"] = "reverse",
+            },
+            files = {
+              cwd_prompt = false,
+              git_icons = true,
+            },
+            grep = {
+              git_icons = true,
+            },
+          })
+
           vim.opt.winborder = "rounded"
 
-          -- Keymaps
-          vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<cr>", { desc = "Toggle explorer" })
-          vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "LSP hover" })
+          vim.diagnostic.config({
+            virtual_text = false,
+            underline = true,
+            signs = true,
+            severity_sort = true,
+            update_in_insert = false,
+            float = {
+              border = "rounded",
+              source = "if_many",
+              focusable = false,
+            },
+          })
+
+          vim.api.nvim_create_autocmd("CursorHold", {
+            callback = function()
+              if vim.fn.mode() ~= "n" then
+                return
+              end
+
+              local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+              local diags = vim.diagnostic.get(0, { lnum = line })
+              if diags and #diags > 0 then
+                vim.diagnostic.open_float(nil, {
+                  scope = "cursor",
+                  border = "rounded",
+                  source = "if_many",
+                  focusable = false,
+                })
+              end
+            end,
+          })
+
+          local hover_opts = {
+            border = "rounded",
+            max_width = 88,
+            max_height = 28,
+          }
+
+          vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover(hover_opts)
+          end, { desc = "LSP hover" })
+
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
+          vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Goto declaration" })
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "References" })
+          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "Goto implementation" })
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
+          vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+
+          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
+          vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+          vim.keymap.set("n", "<leader>xx", function()
+            vim.diagnostic.open_float(nil, { border = "rounded", scope = "cursor" })
+          end, { desc = "Line diagnostics" })
+
+          vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })
+          vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
+          vim.keymap.set("n", "<leader>fb", "<cmd>FzfLua buffers<cr>", { desc = "Buffers" })
+          vim.keymap.set("n", "<leader>fr", "<cmd>FzfLua oldfiles<cr>", { desc = "Recent files" })
+          vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua help_tags<cr>", { desc = "Help tags" })
+          vim.keymap.set("n", "<leader>fc", "<cmd>FzfLua commands<cr>", { desc = "Commands" })
+
+          vim.keymap.set("n", "-", "<cmd>Oil --float<cr>", { desc = "Oil float" })
+          vim.keymap.set("n", "<leader>o", "<cmd>Oil --float<cr>", { desc = "Oil float" })
+          vim.keymap.set("n", "<leader>e", "<cmd>Oil --float<cr>", { desc = "Oil float" })
+
           vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Diffview open" })
           vim.keymap.set("n", "<leader>gD", "<cmd>DiffviewClose<cr>", { desc = "Diffview close" })
 
-          -- Buffer navigation (matches bufferline)
           vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
           vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
           vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Close buffer" })
+
+          vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP info" })
+          vim.keymap.set("n", "<leader>lh", "<cmd>checkhealth vim.lsp<cr>", { desc = "LSP health" })
         '';
       };
     };

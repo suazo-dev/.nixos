@@ -463,8 +463,8 @@ binds {
     Mod+Ctrl+Up { set-window-height "-10%"; }
     Mod+Ctrl+Down { set-window-height "+10%"; }
 
-    Mod+Ctrl+Period { maximize-column; }
-    Mod+Ctrl+Comma { expand-column-to-available-width; }
+    Mod+Ctrl+Comma { maximize-column; }
+    Mod+Ctrl+Period { expand-column-to-available-width; }
     Mod+Ctrl+P { fullscreen-window; }
 
     Mod+Ctrl+T { toggle-window-floating; }

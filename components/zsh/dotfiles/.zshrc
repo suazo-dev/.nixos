@@ -4,30 +4,25 @@ if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
 
-# Set the directory we want to store zinit and plugins
+# Zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-# Download Zinit, if it's not there yet
 if [ ! -d "$ZINIT_HOME" ]; then
-   mkdir -p "$(dirname $ZINIT_HOME)"
-   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+  mkdir -p "$(dirname "$ZINIT_HOME")"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
-# Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 TRANSIENT_PROMPT_TRANSIENT_PROMPT="%F{74c7ec}%f"
 zinit light olets/zsh-transient-prompt
 
-
-
-
-# Add in zsh plugins
+# Plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 
-# Add in snippets
+# Snippets
 zinit snippet OMZL::git.zsh
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
@@ -35,16 +30,26 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
-# Load completions
-autoload -Uz compinit && compinit
-
+# Completion
+autoload -Uz compinit
+compinit
 zinit cdreplay -q
+
+# Native zsh helpers
+autoload -Uz edit-command-line
+autoload -Uz magic-space
+autoload -Uz add-zsh-hook
+autoload -Uz zmv
 
 # Keybindings
 bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
+bindkey '^x^e' edit-command-line
+bindkey ' ' magic-space
+bindkey '^_' undo
+bindkey '^[r' redo
 
 # History
 HISTSIZE=20000
@@ -63,8 +68,8 @@ setopt hist_find_no_dups
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -la --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -la --color=always $realpath'
 
 # Aliases
 alias c='clear'
@@ -72,25 +77,66 @@ alias ls='eza -la'
 alias tree='eza --tree -L 2'
 alias zz='zoxide query -i'
 alias f='fzf'
-alias rg='ripgrep'
-alias tinyon="sudo wg-quick up wg-tiny"
-alias tinyoff="sudo wg-quick down wg-tiny"
-alias ssh tiny="ssh suazo@tiny"
+alias rg='rg'
 
+# Short commands
+.n() { cd ~/.nixos; }
+comp() { cd ~/.nixos/components; }
+feat() { cd ~/.nixos/features; }
+mach() { cd ~/.nixos/machines; }
+.z() { cd ~/.nixos/components/zsh/dotfiles/; }
 
+# Rebuild
+rb() {
+  if [[ -z "$1" ]]; then
+    echo "usage: rb <machine>"
+    return 1
+  fi
+  sudo nixos-rebuild switch --flake ~/.nixos#"$1"
+}
+
+# Global aliases
+alias -g G='| grep'
+alias -g R='| rg'
+alias -g H='| head'
+alias -g T='| tail'
+alias -g L='| less'
+alias -g C='| wc -l'
+alias -g N='> /dev/null 2>&1'
+
+# Suffix aliases
+alias -s md=nvim
+alias -s txt=nvim
+alias -s log=nvim
+alias -s json=nvim
+alias -s toml=nvim
+alias -s yaml=nvim
+alias -s yml=nvim
+alias -s nix=nvim
+alias -s rs=nvim
+alias -s py=nvim
+
+# Auto-list directory contents on directory change
+_auto_ls_chpwd() {
+  eza -la --group-directories-first --icons=always
+}
+
+add-zsh-hook chpwd _auto_ls_chpwd
+
+# Also list once when shell starts
+if [[ -o interactive ]]; then
+  _auto_ls_chpwd
+fi
 
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
-#eval "$(oh-my-posh init zsh --config ~/.cache/oh-my-posh/themes/suazppuccin.toml)"
-
-# source ~/.zsh/zsh-transient-prompt/zsh-transient-prompt.plugin.zsh
 
 # Path adjustments
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 export PATH="/home/suazo/.pixi/bin:$PATH"
 export GOPATH=/opt/go
-export PATH=$GOPATH/bin:$PATH
+export PATH="$GOPATH/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
-export STARSHIP_CONFIG=~/.config/starship.toml
-export PATH=/home/suazo/.opencode/bin:$PATH
+export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+export PATH="/home/suazo/.opencode/bin:$PATH"
