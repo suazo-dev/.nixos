@@ -27,6 +27,5 @@ in {
       };
     };
   };
-  user.groups.acme.members = lib.mkIf configured ["headscale"];
   networking.firewall.allowedTCPPorts = lib.mkIf configured [443];
 }
