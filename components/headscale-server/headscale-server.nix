@@ -1,10 +1,12 @@
-{ lib, spec, ... }:
-let
+{
+  lib,
+  spec,
+  ...
+}: let
   configured =
     (spec.facts.network ? headscaleUrl)
     && (spec.facts.network.headscaleUrl != "https://CHANGE_ME.duckdns.org");
-in
-{
+in {
   services.headscale = lib.mkIf configured {
     enable = true;
     settings = {
@@ -15,9 +17,12 @@ in
         v4 = "100.64.0.0/10";
         v6 = "fd7a:115c:a1e0::/48";
       };
-      dns.base_domain = spec.facts.headscale.baseDomain;
+      dns = {
+        base_domain = spec.facts.headscale.baseDomain;
+        override_local_dns = true;
+        nameservers.global = ["1.1.1.1" "9.9.9.9"];
+      };
     };
   };
-
-  networking.firewall.allowedTCPPorts = lib.mkIf configured [ 8080 ];
+  networking.firewall.allowedTCPPorts = lib.mkIf configured [8080];
 }

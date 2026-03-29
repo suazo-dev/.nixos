@@ -21,10 +21,10 @@
     useIwd = false;
     lanIp = "192.168.8.30";
     tinyIp = "192.168.8.40";
-    duckdnsDomain = "CHANGE_ME.duckdns.org";
-    headscaleUrl = "https://CHANGE_ME.duckdns.org";
+    duckdnsDomain = "teenytiny.duckdns.org";
+    headscaleUrl = "https://teenytiny.duckdns.org";
     wireguard = {
-      endpoint = "CHANGE_ME.duckdns.org:51820";
+      endpoint = "teenytiny.duckdns.org:51820";
       address = "10.8.0.3/24";
     };
   };
