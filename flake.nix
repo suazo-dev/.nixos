@@ -26,24 +26,36 @@
       url = "github:noctalia-dev/noctalia-qs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ flake-parts, nixpkgs, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" ];
+  outputs = inputs @ {
+    flake-parts,
+    nixpkgs,
+    ...
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux"];
 
-      flake =
-        let
-          lib = nixpkgs.lib;
-          entries = builtins.readDir ./machines;
-          machineNames =
-            builtins.filter
-              (n: entries.${n} == "directory" && builtins.pathExists (./machines + "/${n}/default.nix"))
-              (builtins.attrNames entries);
-          mkHost = import ./lib/mkHost.nix { inherit inputs lib; };
-        in
-        {
-          nixosConfigurations = lib.genAttrs machineNames mkHost;
-        };
+      flake = let
+        lib = nixpkgs.lib;
+        entries = builtins.readDir ./machines;
+        machineNames =
+          builtins.filter
+          (n: entries.${n} == "directory" && builtins.pathExists (./machines + "/${n}/default.nix"))
+          (builtins.attrNames entries);
+        mkHost = import ./lib/mkHost.nix {inherit inputs lib;};
+      in {
+        nixosConfigurations = lib.genAttrs machineNames mkHost;
+      };
     };
 }

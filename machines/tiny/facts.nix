@@ -14,9 +14,9 @@
     mamaIp = "192.168.8.10";
     teeIp = "192.168.8.20";
     slimIp = "192.168.8.30";
-    lanInterface = "CHANGE_ME";
-    duckdnsDomain = "CHANGE_ME.duckdns.org";
-    headscaleUrl = "https://CHANGE_ME.duckdns.org";
+    lanInterface = "eno1";
+    duckdnsDomain = "teenytiny.duckdns.org";
+    headscaleUrl = "https://teenytiny.duckdns.org";
     wireguard = {
       listenPort = 51820;
       address = "10.8.0.1/24";

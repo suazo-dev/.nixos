@@ -1,0 +1,9 @@
+keys:
+  - &slim age1jcqfdendq00lz8jjx4ptf58sthdljy4l3evvc7tqyag08hkd8cvsfgn4ly
+  - &tiny age138uv7ume4c8dku8chelymd6zeq5kca97vkcffrunx07ypjaf4pwqquzzr0
+creation_rules:
+  - path_regex: secrets/.*\.yaml$
+    key_groups:
+      - age:
+        - *slim
+        - *tiny

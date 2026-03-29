@@ -81,9 +81,10 @@ alias rg='rg'
 
 # Short commands
 .n() { cd ~/.nixos; }
-comp() { cd ~/.nixos/components; }
-feat() { cd ~/.nixos/features; }
-mach() { cd ~/.nixos/machines; }
+.rs() { cd ~/Code; }
+.cmp() { cd ~/.nixos/components; }
+.ft() { cd ~/.nixos/features; }
+.mx() { cd ~/.nixos/machines; }
 .z() { cd ~/.nixos/components/zsh/dotfiles/; }
 
 # Rebuild
