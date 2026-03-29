@@ -3,7 +3,7 @@
   spec,
   ...
 }: let
-  domain = spec.factd.nrtwork.duckdnsDomain;
+  domain = spec.facts.network.duckdnsDomain;
   configured =
     (spec.facts.network ? headscaleUrl)
     && (spec.facts.network.headscaleUrl != "https://CHANGE_ME.duckdns.org");
