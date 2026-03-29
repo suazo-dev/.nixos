@@ -11,8 +11,10 @@ in {
     enable = true;
     settings = {
       server_url = spec.facts.network.headscaleUrl;
-      listen_addr = "0.0.0.0:8080";
+      listen_addr = "0.0.0.0:443";
       metrics_listen_addr = "127.0.0.1:9090";
+      tls_cert_path = "/var/lib/acme/${domain}/fullchain.pem";
+      tls_key_path = "/var/lib/acme/${domain}/key.pem";  
       prefixes = {
         v4 = "100.64.0.0/10";
         v6 = "fd7a:115c:a1e0::/48";
@@ -24,5 +26,7 @@ in {
       };
     };
   };
-  networking.firewall.allowedTCPPorts = lib.mkIf configured [8080];
+  users.users.headscale/extraGroups = lib.mkIf configured [ "acme" ];
+  networking.firewall.allowedTCPPorts = lib.mkIf configured [ 443 ];
+
 }

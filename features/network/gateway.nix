@@ -5,5 +5,6 @@
     "gateway-routing"
     "gateway-nat"
     "wireguard-gateway"
+    "acme"
   ];
 }
