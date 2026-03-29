@@ -12,7 +12,7 @@ in {
     enable = true;
     settings = {
       server_url = spec.facts.network.headscaleUrl;
-      listen_addr = "0.0.0.0:443";
+      listen_addr = "0.0.0.0:8443";
       metrics_listen_addr = "127.0.0.1:9090";
       tls_cert_path = "/var/lib/acme/${domain}/fullchain.pem";
       tls_key_path = "/var/lib/acme/${domain}/key.pem";
@@ -27,5 +27,5 @@ in {
       };
     };
   };
-  networking.firewall.allowedTCPPorts = lib.mkIf configured [443];
+  networking.firewall.allowedTCPPorts = lib.mkIf configured [8443];
 }
