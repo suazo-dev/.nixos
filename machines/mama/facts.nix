@@ -17,11 +17,15 @@
   network = {
     ethernet = true;
     wifi = false;
-    lanIp = "192.168.8.10";
     tinyIp = "192.168.8.40";
-    teeIp = "192.168.8.20";
-    slimIp = "192.168.8.30";
-    mamaEgressInterface = "CHANGE_ME";
+
+    wireguard = {
+      enable = false;
+      endpoint = "teenytiny.duckdns.org:51820";
+      address = "10.0.0.2/24";
+    };
+
+    tinyWireguardPublicKey = "CHANGE_ME";
   };
 
   sync.folder = "/home/suazo/Sync";

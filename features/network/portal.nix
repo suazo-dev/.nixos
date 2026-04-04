@@ -2,6 +2,6 @@
   components = [
     "networkmanager"
     "iwd"
-    "headscale-client"
+    "wireguard-client"
   ];
 }

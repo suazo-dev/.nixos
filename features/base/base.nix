@@ -1,5 +1,6 @@
 {
   components = [
+    "sops-core"
     "nix-settings"
     "locale"
     "user"

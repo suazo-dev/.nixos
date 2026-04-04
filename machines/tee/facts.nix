@@ -2,6 +2,7 @@
   formFactor = "portal";
   gui = true;
   headless = false;
+
   theme = {
     dark = true;
     cursor = {
@@ -10,20 +11,24 @@
       size = 24;
     };
   };
+
   dotfiles.mode = "store-backed";
+
   network = {
     ethernet = true;
     wifi = true;
     useNetworkManager = true;
     useIwd = true;
-    lanIp = "192.168.8.20";
     tinyIp = "192.168.8.40";
-    duckdnsDomain = "teenytiny.duckdns.org";
-    headscaleUrl = "https://teenytiny.duckdns.org:8443";
+    mamaIp = "192.168.8.10";
+
     wireguard = {
-      endpoint = "teenytiny.duckdns.org:51820";
-      address = "10.8.0.2/24";
+      endpoint = "teenytiny.duckdns.org:51821";
+      address = "10.1.0.2/24";
     };
+
+    tinyWireguardPublicKey = "0y+BImJN5gSFTl90+whh8jKcITZ8csnImCh0xGPQ0Uc=";
   };
+
   sync.folder = "/home/suazo/Sync";
 }

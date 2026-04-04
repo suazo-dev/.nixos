@@ -1,10 +1,8 @@
 {
   components = [
-    "headscale-server"
-    "duckdns"
+    "wireguard-gateway"
     "gateway-routing"
     "gateway-nat"
-    "wireguard-gateway"
-    "acme"
+    "duckdns"
   ];
 }
