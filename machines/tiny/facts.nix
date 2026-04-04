@@ -27,7 +27,7 @@
     };
 
     mamaWireguardPublicKey = "CHANGE_ME";
-    teeWireguardPublicKey = "npyUxONGhrWSRBCElrYfF3nfa/AhIjgRAzJ1Yz3QEWc=";
-    slimWireguardPublicKey = "ST8CCVEvzfWKJeT+2ZlijqsoxGkaAA4501FS+zFj1A=";
+    teeWireguardPublicKey = "hFXXNrwMe77pdly0YEGfFFLeEZ4igkunis85yKNhjAU=";
+    slimWireguardPublicKey = "fIOUtWd/dQxD8sb1AcKUFkIB9j/1J50iwgnhC99QIxI=";
   };
 }
