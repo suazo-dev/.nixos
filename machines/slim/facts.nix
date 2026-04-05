@@ -19,11 +19,11 @@
     wifi = true;
     useNetworkManager = true;
     useIwd = true;
-    tinyIp = "192.168.8.40";
+    tinyIp = "192.168.8.117";
     mamaIp = "192.168.8.10";
 
     wireguard = {
-      endpoint = "192.168.8.40:51821";
+      endpoint = "192.168.8.117:51821";
       address = "10.1.0.3/24";
     };
 
