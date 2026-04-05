@@ -2,6 +2,10 @@
   formFactor = "gateway";
   gui = false;
   headless = true;
+  sshAuthorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDZmKT4DsStSgGCTBBHFk4B4YJ+NW2zXAZisaKF3MEpo"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIkwZUBkhznVjOcbgGAfQUKYOQJtNjxnTT3LDM2KMgcMB"
+  ];
 
   dotfiles.mode = "store-backed";
 

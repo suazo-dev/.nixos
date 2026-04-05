@@ -59,6 +59,7 @@
     users.users.${spec.user} = {
       isNormalUser = true;
       extraGroups = spec.extraGroups;
+      openssh.authorizedKeys.keys = spec.facts.sshAuthorizedKeys or [];
     };
   };
 
