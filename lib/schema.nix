@@ -30,8 +30,8 @@ in
         throw "Machine '${machineName}': 'user' must be a string"
       else if !isString raw.hostName then
         throw "Machine '${machineName}': 'hostName' must be a string"
-      else if !isString raw.role then
-        throw "Machine '${machineName}': 'role' must be a string"
+      else if !isStringList raw.roles then
+        throw "Machine '${machineName}': 'roles' must be a list of strings"
       else if !isString raw.hardware then
         throw "Machine '${machineName}': 'hardware' must be a relative path string"
       else if !isString raw.stateVersion then
@@ -40,8 +40,8 @@ in
         throw "Machine '${machineName}': 'homeStateVersion' must be a string"
       else if !isStringList raw.features then
         throw "Machine '${machineName}': 'features' must be a list of strings"
-      else if raw ? extraComponents && !isStringList raw.extraComponents then
-        throw "Machine '${machineName}': 'extraComponents' must be a list of strings"
+      else if raw ? extraModules && !isStringList raw.extraModules then
+        throw "Machine '${machineName}': 'extraModules' must be a list of strings"
       else if raw ? extraGroups && !isStringList raw.extraGroups then
         throw "Machine '${machineName}': 'extraGroups' must be a list of strings"
       else if raw ? allowedUnfree && !isStringList raw.allowedUnfree then
@@ -67,8 +67,8 @@ in
         throw "Feature '${featureName}' has unknown keys: ${lib.concatStringsSep ", " unknown}"
       else if raw ? features && !(builtins.isList raw.features && builtins.all builtins.isString raw.features) then
         throw "Feature '${featureName}': 'features' must be a list of strings"
-      else if raw ? components && !(builtins.isList raw.components && builtins.all builtins.isString raw.components) then
-        throw "Feature '${featureName}': 'components' must be a list of strings"
+      else if raw ? modules && !(builtins.isList raw.modules && builtins.all builtins.isString raw.modules) then
+        throw "Feature '${featureName}': 'modules' must be a list of strings"
       else
         raw;
 }

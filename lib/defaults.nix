@@ -3,7 +3,8 @@
   user = "suazo";
 
   extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
-  features = [ "base/base" "security/security" ];
+  features = [ "core/core" "cyber/cyber" ];
   allowedUnfree = [ ];
+  roles = [ ];
   mutableUsers = true;
 }

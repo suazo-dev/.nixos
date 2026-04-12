@@ -1,6 +1,6 @@
 {
   allowedKeys = [
     "features"
-    "components"
+    "modules"
   ];
 }

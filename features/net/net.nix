@@ -1,0 +1,7 @@
+{
+  modules = [
+    "openssh"
+    "syncthing"
+    "wireguard"
+  ];
+}

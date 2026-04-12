@@ -1,13 +1,20 @@
 {
-  components = [
-    "dev-core"
+  modules = [
     "nvf"
-    "rust-toolchain"
-    "python-toolchain"
-    "c-toolchain"
-    "gleam-toolchain"
-    "mojo-toolchain"
-    "zed-editor"
+    "helix"
     "opencode"
+    "lazygit"
+    "direnv"
+    "nix-ld"
+    "devenv"
+    "just"
+    "mise"
+    "nil"
+    "nixd"
+    "lua-language-server"
+    "bash-language-server"
+    "shellcheck"
+    "shfmt"
+    "tree-sitter"
   ];
 }

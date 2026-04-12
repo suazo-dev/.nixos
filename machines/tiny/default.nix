@@ -1,17 +1,23 @@
 {
   hostName = "tiny";
-  role = "gateway";
+  roles = [
+    "gateway"
+    "service"
+    "edge"
+  ];
   user = "suazo";
   stateVersion = "25.11";
   homeStateVersion = "25.11";
   hardware = "hardware-configuration.nix";
 
   features = [
-    "base/base"
-    "network/gateway"
-    "security/security"
-    "observability/observability"
-    "sync/sync"
+    "core/core"
+    "cyber/cyber"
+    "net/net"
+  ];
+
+  extraModules = [
+    "duckdns"
   ];
 
   mutableUsers = true;

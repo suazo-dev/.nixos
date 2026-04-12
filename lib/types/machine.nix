@@ -3,12 +3,12 @@
     "system"
     "hostName"
     "user"
-    "role"
+    "roles"
     "features"
     "hardware"
     "stateVersion"
     "homeStateVersion"
-    "extraComponents"
+    "extraModules"
     "extraGroups"
     "allowedUnfree"
     "mutableUsers"
@@ -16,7 +16,7 @@
 
   requiredKeys = [
     "hostName"
-    "role"
+    "roles"
     "stateVersion"
     "homeStateVersion"
     "hardware"

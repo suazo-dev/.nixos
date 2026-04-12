@@ -24,11 +24,12 @@
     // {
       features =
         lib.unique ((defaults.features or []) ++ (checkedMachine.features or []));
-      extraComponents = checkedMachine.extraComponents or [];
+      extraModules = checkedMachine.extraModules or [];
       extraGroups =
         lib.unique ((defaults.extraGroups or []) ++ (checkedMachine.extraGroups or []));
       allowedUnfree =
         lib.unique ((defaults.allowedUnfree or []) ++ (checkedMachine.allowedUnfree or []));
+      roles = lib.unique ((defaults.roles or []) ++ (checkedMachine.roles or []));
       mutableUsers = checkedMachine.mutableUsers or defaults.mutableUsers;
       facts = facts;
     };
@@ -38,19 +39,19 @@
     root = root;
   };
 
-  componentResolver = import ./resolve/components.nix {
+  moduleResolver = import ./resolve/modules.nix {
     root = root;
     inherit machineName;
   };
 
   resolvedFeatures = featureResolver.resolve spec.features;
 
-  componentNames = lib.unique (
-    lib.concatLists (map (f: f.components or []) resolvedFeatures.features)
-    ++ spec.extraComponents
+  moduleNames = lib.unique (
+    lib.concatLists (map (f: f.modules or []) resolvedFeatures.features)
+    ++ spec.extraModules
   );
 
-  componentPaths = componentResolver.paths componentNames;
+  modulePaths = moduleResolver.paths moduleNames;
   hardwarePath = root + "/machines/${machineName}/${spec.hardware}";
 
   userModule = {
@@ -90,12 +91,11 @@ in
     };
     modules =
       [
-        inputs.sops-nix.nixosModules.sops
         inputs.home-manager.nixosModules.home-manager
         userModule
         hostCoreModule
         unfreeModule
       ]
       ++ lib.optional (builtins.pathExists hardwarePath) hardwarePath
-      ++ componentPaths;
+      ++ modulePaths;
   }
