@@ -17,12 +17,13 @@
   network = {
     ethernet = true;
     wifi = false;
-    tinyIp = "192.168.8.40";
+    tinyIp = "192.168.8.108";
 
     wireguard = {
       enable = true;
-      endpoint = "192.168.8.40:51820";
+      endpoint = "192.168.8.108:51820";
       address = "10.0.0.2/24";
+      listenPort = 51822;
     };
 
     tinyWg0PublicKey = "wkQE+ob7KUFxcX44JEY1Lt/Ih3ujp1qZeQ3B1h5vKFA=";

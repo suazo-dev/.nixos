@@ -23,15 +23,15 @@
     wifi = true;
     useNetworkManager = true;
     useIwd = true;
-    tinyIp = "192.168.8.40";
+    tinyIp = "192.168.8.108";
     mamaIp = "192.168.8.10";
 
     wireguard = {
-      endpoint = "192.168.8.40:51821";
+      endpoint = "192.168.8.108:51821";
       address = "10.1.0.3/24";
     };
 
-    tinyWg1PublicKey = "RyloTPHjCXGLn36WPczGPqnHJsjZrCjlog16AJyerGI=OB";
+    tinyWg1PublicKey = "RyloTPHjCXGLn36WPczGPqnHJsjZrCjlog16AJyerGI=";
   };
 
   sync.folder = "/home/suazo/Sync";
