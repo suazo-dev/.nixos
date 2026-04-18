@@ -14,6 +14,8 @@
     wifi = false;
     useNetworkManager = false;
     useIwd = false;
+    lanInterface = "eno1";
+    tinyIp = "192.168.8.108";
     mamaIp = "192.168.8.10";
     teeIp = "192.168.8.20";
     slimIp = "192.168.8.30";
