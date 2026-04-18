@@ -32,7 +32,7 @@
       address = "10.1.0.2/24";
     };
 
-    tinyWireguardPublicKey = "vlwKRiZiTqUIPn3Y7xcSQN8KNWZeRWODNcX8iqeBmT0=";
+    tinyWg1PublicKey = "RyloTPHjCXGLn36WPczGPqnHJsjZrCjlog16AJyerGI=OB";
   };
 
   sync.folder = "/home/suazo/Sync";
