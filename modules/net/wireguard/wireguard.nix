@@ -102,6 +102,7 @@ in {
     (lib.mkIf (hasRole "core" && (n.wireguard.enable or false)) {
       wg0 = {
         address = [ n.wireguard.address ];
+        listenPort = n.wireguard.listenPort or null;
         privateKeyFile = config.sops.secrets."wireguard/mama".path;
 
         peers = [

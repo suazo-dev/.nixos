@@ -3,7 +3,6 @@
     "zsh"
     "starship"
     "tmux"
-    "git"
     "yazi"
     "fastfetch"
     "ripgrep"

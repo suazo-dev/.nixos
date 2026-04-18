@@ -5,5 +5,6 @@
     "bootloader"
     "nix"
     "sops"
+    "git"
   ];
 }
