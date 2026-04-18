@@ -3,6 +3,7 @@ let
   n = spec.facts.network;
   hasRole = role: builtins.elem role spec.roles;
   tinyLan = n.tinyIp or null;
+  wg0Port = if hasRole "gateway" then toString n.wireguard.wg0.listenPort else null;
   wg1Port = if hasRole "gateway" then toString n.wireguard.wg1.listenPort else null;
 in {
   boot.kernel.sysctl = lib.mkIf (hasRole "gateway") {
@@ -23,9 +24,11 @@ in {
             iifname "lo" accept
             ct state established,related accept
 
+            iifname "wg0" accept
             iifname "wg1" accept
 
             ip protocol icmp accept
+            udp dport ${wg0Port} accept
             udp dport ${wg1Port} accept
             tcp dport 22 accept
           }
@@ -33,6 +36,15 @@ in {
           chain forward {
             type filter hook forward priority 0; policy drop;
             ct state established,related accept
+
+            iifname "wg1" oifname "wg0" accept
+            iifname "wg0" oifname "wg1" accept
+            iifname "wg0" oifname != "wg1" accept
+          }
+
+          chain postrouting {
+            type nat hook postrouting priority srcnat; policy accept;
+            iifname "wg0" oifname != "wg0" oifname != "wg1" masquerade
           }
         '';
       };

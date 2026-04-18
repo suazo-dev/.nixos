@@ -17,6 +17,13 @@ in {
       };
     })
     (lib.mkIf (hasRole "gateway") {
+      "wireguard/tiny-wg0" = {
+        owner = "root";
+        group = "root";
+        mode = "0400";
+        path = "/run/secrets/wireguard/tiny-wg0.key";
+      };
+
       "wireguard/tiny-wg1" = {
         owner = "root";
         group = "root";
@@ -35,6 +42,7 @@ in {
   ];
 
   networking.firewall.allowedUDPPorts = lib.mkIf (hasRole "gateway") [
+    n.wireguard.wg0.listenPort
     n.wireguard.wg1.listenPort
   ];
 
@@ -46,7 +54,7 @@ in {
 
         peers = [
           {
-            publicKey = n.tinyWireguardPublicKey;
+            publicKey = n.tinyWg1PublicKey or n.tinyWireguardPublicKey;
             endpoint = n.wireguard.endpoint;
             allowedIPs = [
               "10.1.0.0/24"
@@ -58,6 +66,20 @@ in {
       };
     })
     (lib.mkIf (hasRole "gateway") {
+      wg0 = {
+        address = [ n.wireguard.wg0.address ];
+        listenPort = n.wireguard.wg0.listenPort;
+        privateKeyFile = config.sops.secrets."wireguard/tiny-wg0".path;
+
+        peers = [
+          {
+            publicKey = n.mamaWireguardPublicKey;
+            allowedIPs = [ "10.0.0.2/32" ];
+            persistentKeepalive = 25;
+          }
+        ];
+      };
+
       wg1 = {
         address = [ n.wireguard.wg1.address ];
         listenPort = n.wireguard.wg1.listenPort;
@@ -84,7 +106,7 @@ in {
 
         peers = [
           {
-            publicKey = n.tinyWireguardPublicKey;
+            publicKey = n.tinyWg0PublicKey or n.tinyWireguardPublicKey;
             endpoint = n.wireguard.endpoint;
             allowedIPs = [ "0.0.0.0/0" ];
             persistentKeepalive = 25;

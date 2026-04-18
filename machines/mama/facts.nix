@@ -20,12 +20,12 @@
     tinyIp = "192.168.8.40";
 
     wireguard = {
-      enable = false;
-      endpoint = "teenytiny.duckdns.org:51820";
+      enable = true;
+      endpoint = "192.168.8.40:51820";
       address = "10.0.0.2/24";
     };
 
-    tinyWireguardPublicKey = "CHANGE_ME";
+    tinyWireguardPublicKey = "vlwKRiZiTqUIPn3Y7xcSQN8KNWZeRWODNcX8iqeBmT0=";
   };
 
   sync.folder = "/home/suazo/Sync";
