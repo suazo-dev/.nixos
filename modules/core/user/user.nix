@@ -1,22 +1,23 @@
 { pkgs, spec, lib, ... }:
 let
-  alwaysOnHosts = [ "tiny" "mama" ];
+  hasRole = role: builtins.elem role spec.roles;
+  alwaysOn = hasRole "gateway" || hasRole "core";
   n = spec.facts.network or { };
   wolInterface = n.lanInterface or null;
 in {
   programs.zsh.enable = true;
   users.users.${spec.user}.shell = pkgs.zsh;
 
-  environment.systemPackages = lib.mkIf (builtins.elem spec.hostName alwaysOnHosts) [ pkgs.wakeonlan pkgs.ethtool ];
+  environment.systemPackages = lib.mkIf alwaysOn [ pkgs.wakeonlan pkgs.ethtool ];
 
-  systemd.targets = lib.mkIf (builtins.elem spec.hostName alwaysOnHosts) {
+  systemd.targets = lib.mkIf alwaysOn {
     sleep.enable = false;
     suspend.enable = false;
     hibernate.enable = false;
     hybrid-sleep.enable = false;
   };
 
-  services.logind = lib.mkIf (builtins.elem spec.hostName alwaysOnHosts) {
+  services.logind = lib.mkIf alwaysOn {
     lidSwitch = "ignore";
     lidSwitchExternalPower = "ignore";
     lidSwitchDocked = "ignore";
@@ -27,7 +28,7 @@ in {
     };
   };
 
-  systemd.services.enable-wake-on-lan = lib.mkIf ((builtins.elem spec.hostName alwaysOnHosts) && (wolInterface != null)) {
+  systemd.services.enable-wake-on-lan = lib.mkIf (alwaysOn && (wolInterface != null)) {
     description = "Enable Wake-on-LAN";
     wantedBy = [ "multi-user.target" ];
     after = [ "network-pre.target" ];

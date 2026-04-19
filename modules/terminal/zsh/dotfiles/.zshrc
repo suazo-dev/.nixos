@@ -1,5 +1,7 @@
 export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
 
+[ -f "$HOME/.config/zsh/host-flags.zsh" ] && source "$HOME/.config/zsh/host-flags.zsh"
+
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
@@ -32,7 +34,11 @@ zinit snippet OMZP::command-not-found
 
 # Completion
 autoload -Uz compinit
-compinit
+if [[ "${ZSH_HOST_HEADLESS:-0}" == "1" ]]; then
+  compinit -C
+else
+  compinit
+fi
 zinit cdreplay -q
 
 # Native zsh helpers
@@ -118,7 +124,7 @@ alias wg0off='wgoff wg0'
 alias wg1on='wgon wg1'
 alias wg1off='wgoff wg1'
 
-if [[ "$(hostname)" == "slim" || "$(hostname)" == "tee" ]]; then
+if [[ "${ZSH_HOST_PORTAL:-0}" == "1" ]]; then
   alias tinyon='wakeonlan 00:23:24:73:05:91'
   alias mamaon='wakeonlan c4:65:16:b6:8c:3c'
   alias sshtiny='ssh suazo@tiny'
@@ -154,7 +160,7 @@ _auto_ls_chpwd() {
 add-zsh-hook chpwd _auto_ls_chpwd
 
 # Also list once when shell starts
-if [[ -o interactive ]]; then
+if [[ -o interactive && "${ZSH_HOST_HEADLESS:-0}" != "1" ]]; then
   _auto_ls_chpwd
 fi
 

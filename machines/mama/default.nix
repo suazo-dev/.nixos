@@ -2,7 +2,6 @@
   hostName = "mama";
   roles = [
     "core"
-    "workstation"
     "storage"
   ];
   user = "suazo";
