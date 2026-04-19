@@ -1,5 +1,9 @@
 export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
 
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+
 # Zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -166,7 +170,3 @@ export PATH="$GOPATH/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 export PATH="/home/suazo/.opencode/bin:$PATH"
-
-if command -v starship >/dev/null 2>&1; then
-  eval "$(starship init zsh)"
-fi
