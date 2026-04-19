@@ -12,6 +12,7 @@
 
   features = [
     "core/core"
+    "terminal/terminal"
     "cyber/cyber"
     "net/net"
   ];
