@@ -47,8 +47,8 @@ $python\
 $conda\
 [](fg:sapphire bg:lavender)\
 $time\
-$cmd_duration\
 [ ](fg:lavender)\
+$cmd_duration\
 \n$character"""
 
 
