@@ -31,8 +31,12 @@ in
     };
     programs.ssh = {
       enable = true;
+      enableDefaultConfig = false;
       matchBlocks =
-        if hasRole "portal" then {
+        {
+          "*" = {};
+        }
+        // (if hasRole "portal" then {
           tiny = {
             host = "tiny";
             hostname = "10.1.0.1";
@@ -47,7 +51,7 @@ in
             serverAliveInterval = 30;
             serverAliveCountMax = 6;
           };
-        } else { };
+        } else { });
     };
 
   };

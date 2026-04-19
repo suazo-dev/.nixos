@@ -18,10 +18,10 @@ in {
   };
 
   services.logind = lib.mkIf alwaysOn {
-    lidSwitch = "ignore";
-    lidSwitchExternalPower = "ignore";
-    lidSwitchDocked = "ignore";
     settings.Login = {
+      HandleLidSwitch = "ignore";
+      HandleLidSwitchExternalPower = "ignore";
+      HandleLidSwitchDocked = "ignore";
       IdleAction = "ignore";
       HandleSuspendKey = "ignore";
       HandleHibernateKey = "ignore";

@@ -237,7 +237,7 @@
           nvim-web-devicons.enable = true;
           highlight-undo.enable = true;
           fidget-nvim.enable = true;
-          indentBlankline.enable = true;
+          indent-blankline.enable = true;
         };
 
         debugger.nvim-dap = {

@@ -4,9 +4,9 @@
     programs.git = {
       enable = true;
       package = pkgs.git;
-      userName = "suazo-dev";
-      userEmail = "me@suazo.dev";
-      extraConfig = {
+      settings = {
+        user.name = "suazo-dev";
+        user.email = "me@suazo.dev";
         init.defaultBranch = "main";
         pull.rebase = false;
       };

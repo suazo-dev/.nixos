@@ -92,9 +92,6 @@ alias rg='rg'
 .ft() { cd ~/.nixos/features; }
 .mx() { cd ~/.nixos/machines; }
 .z() { cd ~/.nixos/components/zsh/dotfiles/; }
-cda() {
-  cd "$1" && eza -la --group-directories-first --icons=always
-}
 
 # Rebuild
 rb() {
