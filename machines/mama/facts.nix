@@ -23,6 +23,8 @@
   network = {
     ethernet = true;
     wifi = false;
+    lanInterface = "eno1";
+    wakeMac = "c4:65:16:b6:8c:3c";
     tinyIp = "192.168.8.108";
 
     wireguard = {

@@ -15,6 +15,7 @@
     useNetworkManager = false;
     useIwd = false;
     lanInterface = "eno1";
+    wakeMac = "00:23:24:73:05:91";
     tinyIp = "192.168.8.108";
     mamaIp = "192.168.8.10";
     teeIp = "192.168.8.20";

@@ -96,6 +96,35 @@ rb() {
   sudo nixos-rebuild switch --flake ~/.nixos#"$1"
 }
 
+# WireGuard helpers
+wgon() {
+  if [[ -z "$1" ]]; then
+    echo "usage: wgon <wg0|wg1>"
+    return 1
+  fi
+  sudo systemctl restart "wg-quick-$1"
+}
+
+wgoff() {
+  if [[ -z "$1" ]]; then
+    echo "usage: wgoff <wg0|wg1>"
+    return 1
+  fi
+  sudo systemctl stop "wg-quick-$1"
+}
+
+alias wg0on='wgon wg0'
+alias wg0off='wgoff wg0'
+alias wg1on='wgon wg1'
+alias wg1off='wgoff wg1'
+
+if [[ "$(hostname)" == "slim" || "$(hostname)" == "tee" ]]; then
+  alias tiny='ssh suazo@tiny'
+  alias mama='ssh suazo@mama'
+  alias wake-tiny='wakeonlan 00:23:24:73:05:91'
+  alias wake-mama='wakeonlan c4:65:16:b6:8c:3c'
+fi
+
 # Global aliases
 alias -g G='| grep'
 alias -g R='| rg'
