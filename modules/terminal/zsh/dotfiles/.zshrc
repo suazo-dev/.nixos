@@ -92,6 +92,9 @@ alias rg='rg'
 .ft() { cd ~/.nixos/features; }
 .mx() { cd ~/.nixos/machines; }
 .z() { cd ~/.nixos/components/zsh/dotfiles/; }
+cda() {
+  cd "$1" && eza -la --group-directories-first --icons=always
+}
 
 # Rebuild
 rb() {
@@ -151,18 +154,6 @@ alias -s yml=nvim
 alias -s nix=nvim
 alias -s rs=nvim
 alias -s py=nvim
-
-# Auto-list directory contents on directory change
-_auto_ls_chpwd() {
-  eza -la --group-directories-first --icons=always
-}
-
-add-zsh-hook chpwd _auto_ls_chpwd
-
-# Also list once when shell starts
-if [[ -o interactive && "${ZSH_HOST_HEADLESS:-0}" != "1" ]]; then
-  _auto_ls_chpwd
-fi
 
 # Shell integrations
 eval "$(fzf --zsh)"
