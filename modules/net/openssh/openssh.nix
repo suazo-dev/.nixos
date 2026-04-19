@@ -8,5 +8,8 @@
     KbdInteractiveAuthentication = false;
     PubkeyAuthentication = true;
     X11Forwarding = false;
+    TCPKeepAlive = true;
+    ClientAliveInterval = 30;
+    ClientAliveCountMax = 6;
   };
 }

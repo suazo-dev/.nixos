@@ -1,4 +1,7 @@
 { lib, spec, ... }:
 {
-  services.upower.enable = lib.mkIf (!spec.facts.headless) true;
+  services.upower.enable =
+    if spec.hostName == "mama"
+    then lib.mkForce false
+    else lib.mkIf (!spec.facts.headless) true;
 }

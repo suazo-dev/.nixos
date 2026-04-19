@@ -19,13 +19,27 @@
             host = "tiny";
             hostname = "10.1.0.1";
             user = spec.user;
+            serverAliveInterval = 30;
+            serverAliveCountMax = 6;
           };
           mama = {
             host = "mama";
             hostname = "10.0.0.2";
             user = spec.user;
+            serverAliveInterval = 30;
+            serverAliveCountMax = 6;
           };
         } else { };
     };
+
+    xdg.configFile =
+      if spec.hostName == "mama" then {
+        "autostart/org_kde_powerdevil.desktop".text = ''
+          [Desktop Entry]
+          Type=Application
+          Name=PowerDevil
+          Hidden=true
+        '';
+      } else { };
   };
 }

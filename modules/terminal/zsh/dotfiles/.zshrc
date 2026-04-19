@@ -120,9 +120,15 @@ alias wg1off='wgoff wg1'
 
 if [[ "$(hostname)" == "slim" || "$(hostname)" == "tee" ]]; then
   alias tiny='ssh suazo@tiny'
-  alias mama='ssh suazo@mama'
+  alias mama="ssh -t suazo@mama 'tmux new -As main'"
   alias wake-tiny='wakeonlan 00:23:24:73:05:91'
   alias wake-mama='wakeonlan c4:65:16:b6:8c:3c'
+  alias tinyon='wakeonlan 00:23:24:73:05:91'
+  alias mamaon='wakeonlan c4:65:16:b6:8c:3c'
+  alias tinywake='wakeonlan 00:23:24:73:05:91'
+  alias mamawake='wakeonlan c4:65:16:b6:8c:3c'
+  alias sshtiny='ssh suazo@tiny'
+  alias sshmama="ssh -t suazo@mama 'tmux new -As main'"
 fi
 
 # Global aliases
