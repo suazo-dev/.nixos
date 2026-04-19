@@ -1,7 +1,7 @@
 { pkgs, spec, lib, ... }:
 {
   environment.systemPackages =
-    [ pkgs.zsh ]
+    [ pkgs.zsh pkgs.ghostty.terminfo ]
     ++ lib.optionals (builtins.elem spec.hostName [ "slim" "tee" ]) [ pkgs.wakeonlan ];
 
   environment.sessionVariables = {

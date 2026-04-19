@@ -1,9 +1,5 @@
 export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
 
-if command -v starship >/dev/null 2>&1; then
-  eval "$(starship init zsh)"
-fi
-
 # Zinit
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -119,14 +115,8 @@ alias wg1on='wgon wg1'
 alias wg1off='wgoff wg1'
 
 if [[ "$(hostname)" == "slim" || "$(hostname)" == "tee" ]]; then
-  alias tiny='ssh suazo@tiny'
-  alias mama="ssh -t suazo@mama 'tmux new -As main'"
-  alias wake-tiny='wakeonlan 00:23:24:73:05:91'
-  alias wake-mama='wakeonlan c4:65:16:b6:8c:3c'
   alias tinyon='wakeonlan 00:23:24:73:05:91'
   alias mamaon='wakeonlan c4:65:16:b6:8c:3c'
-  alias tinywake='wakeonlan 00:23:24:73:05:91'
-  alias mamawake='wakeonlan c4:65:16:b6:8c:3c'
   alias sshtiny='ssh suazo@tiny'
   alias sshmama="ssh -t suazo@mama 'tmux new -As main'"
 fi
@@ -176,3 +166,7 @@ export PATH="$GOPATH/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export STARSHIP_CONFIG="$HOME/.config/starship.toml"
 export PATH="/home/suazo/.opencode/bin:$PATH"
+
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi

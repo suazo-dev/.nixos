@@ -27,6 +27,7 @@ format = """
 [░▒▓](red)\
 $os\
 $username\
+$hostname\
 [](bg:peach fg:red)\
 $directory\
 [](bg:yellow fg:peach)\
@@ -45,9 +46,9 @@ $python\
 [](fg:green bg:sapphire)\
 $conda\
 [](fg:sapphire bg:lavender)\
+$cmd_duration\
 $time\
 [ ](fg:lavender)\
-$cmd_duration\
 \n$character"""
 
 
@@ -76,6 +77,7 @@ Arch = "󰣇"
 Artix = "󰣇"
 CentOS = ""
 Debian = "󰣚"
+NixOS = ""
 Redhat = "󱄛"
 RedHatEnterprise = "󱄛"
 
@@ -84,6 +86,11 @@ show_always = true
 style_user = "bg:red fg:crust"
 style_root = "bg:red fg:crust"
 format = '[ $user]($style)'
+
+[hostname]
+ssh_only = false
+style = "bg:red fg:crust"
+format = '[@$hostname ]($style)'
 
 [directory]
 style = "bg:peach fg:crust"
