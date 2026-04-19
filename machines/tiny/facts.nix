@@ -34,6 +34,6 @@
 
     mamaWireguardPublicKey = "9nbLPKBbdKz7AHIAPsO3zI5L4xcPNfWtNRrIxWn7AV4=";
     teeWireguardPublicKey = "ZYVWprVyyBZ3twqlG0Oy4M4yFOd1k+rg2JvDZZgS6Bc=";
-    slimWireguardPublicKey = "AgTfDPo4SKI9ZHl8EgLMZxIS2cpSlL0vD2d8a7hCKx8=";
+    slimWireguardPublicKey = "IkovrxdCMGX0j5LmowsZYOE6Nxdm2kvRMBWWrpbu6FY=";
   };
 }

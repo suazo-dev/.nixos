@@ -27,7 +27,7 @@
     mamaIp = "192.168.8.10";
 
     wireguard = {
-      endpoint = "192.168.8.108:51821";
+      endpoint = "teenytiny.duckdns.org:51821";
       address = "10.1.0.3/24";
     };
 
