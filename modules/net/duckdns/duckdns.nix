@@ -8,7 +8,17 @@ let
     set -euo pipefail
     DOMAIN="${spec.facts.network.duckdnsDomain}"
     TOKEN="$(tr -d '\n' < ${config.sops.secrets."duckdns/token".path})"
-    ${pkgs.curl}/bin/curl -fsS "https://www.duckdns.org/update?domains=''${DOMAIN%%.duckdns.org}&token=$TOKEN&ip=" >/dev/null
+    RESPONSE="$(${pkgs.curl}/bin/curl -fsS \
+      --retry 3 \
+      --retry-delay 2 \
+      --connect-timeout 10 \
+      --max-time 30 \
+      "https://www.duckdns.org/update?domains=''${DOMAIN%%.duckdns.org}&token=$TOKEN&ip=")"
+
+    if [ "$RESPONSE" != "OK" ]; then
+      printf 'DuckDNS update failed: %s\n' "$RESPONSE" >&2
+      exit 1
+    fi
   '';
 in
 {
@@ -21,6 +31,8 @@ in
 
   systemd.services.duckdns-update = lib.mkIf configured {
     description = "Update DuckDNS";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = "${updateScript}";
