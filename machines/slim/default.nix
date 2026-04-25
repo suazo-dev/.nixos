@@ -20,5 +20,7 @@
     "iwd"
   ];
 
+  allowedUnfree = [ "claude-code" ];
+
   mutableUsers = true;
 }

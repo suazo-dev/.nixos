@@ -1,5 +1,6 @@
 {
   modules = [
+    "claude-code"
     "nvf"
     "helix"
     "opencode"
