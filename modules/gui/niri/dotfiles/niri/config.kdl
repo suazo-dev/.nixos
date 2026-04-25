@@ -482,5 +482,13 @@ binds {
 
     Mod+M { power-off-monitors; }
 
-    // Multi-monitor binds intentionally omitted for now.
+    Mod+Shift+BracketLeft { focus-monitor-left; }
+    Mod+Shift+BracketRight { focus-monitor-right; }
+    Mod+Shift+P { move-window-to-monitor-right; }
+    Mod+Shift+L { move-window-to-monitor-left; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+Ctrl+Shift+BracketLeft { move-window-to-monitor-left; }
+    Mod+Ctrl+Shift+BracketRight { move-window-to-monitor-right; }
+    Mod+Alt+BracketLeft { move-column-to-monitor-left; }
+    Mod+Alt+BracketRight { move-column-to-monitor-right; }
 }

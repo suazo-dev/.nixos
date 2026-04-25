@@ -46,6 +46,15 @@
           catppuccin = {
             package = pkgs.vimPlugins.catppuccin-nvim;
           };
+          plenary = {
+            package = pkgs.vimPlugins.plenary-nvim;
+          };
+          nui = {
+            package = pkgs.vimPlugins.nui-nvim;
+          };
+          mini-icons = {
+            package = pkgs.vimPlugins.mini-icons;
+          };
           smear-cursor = {
             package = pkgs.vimPlugins.smear-cursor-nvim;
           };
@@ -55,8 +64,8 @@
           mini-ai = {
             package = pkgs.vimPlugins.mini-ai;
           };
-          harpoon2 = {
-            package = pkgs.vimPlugins.harpoon2;
+          mini-surround = {
+            package = pkgs.vimPlugins.mini-surround;
           };
           statuscol = {
             package = pkgs.vimPlugins.statuscol-nvim;
@@ -73,11 +82,53 @@
           oil = {
             package = pkgs.vimPlugins.oil-nvim;
           };
+          flash = {
+            package = pkgs.vimPlugins.flash-nvim;
+          };
+          trouble = {
+            package = pkgs.vimPlugins.trouble-nvim;
+          };
+          todo-comments = {
+            package = pkgs.vimPlugins.todo-comments-nvim;
+          };
+          persistence = {
+            package = pkgs.vimPlugins.persistence-nvim;
+          };
+          noice = {
+            package = pkgs.vimPlugins.noice-nvim;
+          };
+          conform = {
+            package = pkgs.vimPlugins.conform-nvim;
+          };
+          nvim-lint = {
+            package = pkgs.vimPlugins.nvim-lint;
+          };
+          grug-far = {
+            package = pkgs.vimPlugins.grug-far-nvim;
+          };
+          comment = {
+            package = pkgs.vimPlugins.comment-nvim;
+          };
+          ts-comments = {
+            package = pkgs.vimPlugins.ts-comments-nvim;
+          };
+          lazydev = {
+            package = pkgs.vimPlugins.lazydev-nvim;
+          };
           opencode = {
             package = pkgs.vimPlugins.opencode-nvim;
           };
-          fzf-lua = {
-            package = pkgs.vimPlugins.fzf-lua;
+          mason = {
+            package = pkgs.vimPlugins.mason-nvim;
+          };
+          mason-lspconfig = {
+            package = pkgs.vimPlugins.mason-lspconfig-nvim;
+          };
+          dap-virtual-text = {
+            package = pkgs.vimPlugins.nvim-dap-virtual-text;
+          };
+          treesitter-textobjects = {
+            package = pkgs.vimPlugins.nvim-treesitter-textobjects;
           };
         };
 
@@ -107,12 +158,12 @@
                 delay = 300;
               };
               signs = {
-                add = {text = "┃";};
-                change = {text = "┃";};
-                delete = {text = "_";};
-                topdelete = {text = "‾";};
-                changedelete = {text = "~";};
-                untracked = {text = "┆";};
+                add = {text = "▎";};
+                change = {text = "▎";};
+                delete = {text = "";};
+                topdelete = {text = "";};
+                changedelete = {text = "▎";};
+                untracked = {text = "▎";};
               };
             };
           };
@@ -120,7 +171,7 @@
 
         lsp = {
           enable = true;
-          formatOnSave = true;
+          formatOnSave = false;
           lightbulb.enable = true;
           lspkind.enable = true;
           lspSignature.enable = false;
@@ -159,8 +210,8 @@
                 enabled = true;
                 auto_show = true;
                 auto_show_delay_ms = 0;
-                min_width = 32;
-                max_height = 14;
+                min_width = 28;
+                max_height = 10;
                 border = "rounded";
                 scrollbar = true;
                 direction_priority = ["s" "n"];
@@ -177,12 +228,12 @@
 
               documentation = {
                 auto_show = true;
-                auto_show_delay_ms = 120;
+                auto_show_delay_ms = 180;
                 update_delay_ms = 50;
                 window = {
-                  min_width = 20;
-                  max_width = 88;
-                  max_height = 24;
+                  min_width = 18;
+                  max_width = 56;
+                  max_height = 16;
                   border = "rounded";
                   scrollbar = true;
                 };
@@ -199,8 +250,19 @@
 
             signature = {
               enabled = true;
+              trigger = {
+                show_on_keyword = false;
+                show_on_trigger_character = true;
+                show_on_insert = false;
+                show_on_insert_on_trigger_character = true;
+                show_on_accept = true;
+                show_on_accept_on_trigger_character = true;
+              };
               window = {
                 border = "rounded";
+                min_width = 20;
+                max_width = 56;
+                max_height = 12;
               };
             };
 
@@ -222,16 +284,23 @@
               bigfile.enabled = true;
               notifier.enabled = true;
               quickfile.enabled = true;
-              indent.enabled = true;
-              scroll.enabled = true;
               dashboard.enabled = false;
+              explorer.enabled = true;
+              picker.enabled = true;
+              indent.enabled = true;
+              input.enabled = true;
+              scope.enabled = true;
+              scroll.enabled = true;
+              words.enabled = true;
+              terminal.enabled = true;
+              toggle.enabled = true;
             };
           };
 
           smart-splits.enable = true;
         };
 
-        dashboard.alpha.enable = false;
+        dashboard.alpha.enable = true;
 
         visuals = {
           nvim-web-devicons.enable = true;
@@ -322,14 +391,16 @@
           ]]
 
           dashboard.section.header.val = vim.split(logo, "\n")
+          dashboard.section.header.opts.hl = "AlphaHeader"
 
           dashboard.section.buttons.val = {
-            dashboard.button("f", " " .. " Files",        "<cmd>FzfLua files<cr>"),
-            dashboard.button("g", " " .. " Grep",         "<cmd>FzfLua live_grep<cr>"),
-            dashboard.button("r", " " .. " Recent files", "<cmd>FzfLua oldfiles<cr>"),
-            dashboard.button("o", " " .. " Oil float",    "<cmd>Oil --float<cr>"),
-            dashboard.button("c", " " .. " Config",       "<cmd>e ~/.nixos/modules/dev/nvf/nvf.nix<cr>"),
-            dashboard.button("q", " " .. " Quit",         "<cmd>qa<cr>"),
+            dashboard.button("f", "  Find File", "<cmd>lua require('snacks').picker.files()<cr>"),
+            dashboard.button("g", "  Find Text", "<cmd>lua require('snacks').picker.grep()<cr>"),
+            dashboard.button("r", "  Recent Files", "<cmd>lua require('snacks').picker.recent()<cr>"),
+            dashboard.button("e", "  Explorer", "<cmd>lua require('oil').open_float()<cr>"),
+            dashboard.button("c", "  Config", "<cmd>lua require('snacks').picker.files({ cwd = vim.fn.stdpath('config') })<cr>"),
+            dashboard.button("s", "  Restore Session", "<cmd>lua require('persistence').load()<cr>"),
+            dashboard.button("q", "  Quit", "<cmd>qa<cr>"),
           }
 
           for _, button in ipairs(dashboard.section.buttons.val) do
@@ -337,11 +408,7 @@
             button.opts.hl_shortcut = "AlphaShortcut"
           end
 
-          dashboard.section.header.opts.hl = "AlphaHeader"
-          dashboard.section.buttons.opts.hl = "AlphaButtons"
-          dashboard.section.footer.opts.hl = "AlphaFooter"
           dashboard.opts.layout[1].val = 8
-
           alpha.setup(dashboard.opts)
         '';
 
@@ -378,6 +445,103 @@
             },
           })
           vim.cmd.colorscheme("catppuccin")
+
+          local ui = {
+            bg = "#000000",
+            panel = "#0a0a0a",
+            panel_alt = "#111111",
+            border = "#2a2a2a",
+            border_bright = "#ffffff",
+            fg = "#d6d6d6",
+            text = "#b8b8b8",
+            muted = "#7a7a7a",
+            subtle = "#4e4e4e",
+            bright = "#ffffff",
+          }
+
+          local set_hl = vim.api.nvim_set_hl
+          local groups = {
+            Normal = { fg = ui.fg, bg = ui.bg },
+            NormalNC = { fg = ui.fg, bg = ui.bg },
+            NormalFloat = { fg = ui.fg, bg = ui.panel },
+            FloatBorder = { fg = ui.border_bright, bg = ui.panel },
+            FloatTitle = { fg = ui.bright, bg = ui.panel },
+            CmdLine = { fg = ui.bright, bg = ui.panel_alt },
+            MsgArea = { fg = ui.bright, bg = ui.bg },
+            SignColumn = { bg = ui.bg },
+            LineNr = { fg = ui.subtle, bg = ui.bg },
+            CursorLineNr = { fg = ui.bright, bg = ui.bg, bold = true },
+            CursorLine = { bg = ui.panel },
+            CursorColumn = { bg = ui.panel },
+            EndOfBuffer = { fg = ui.bg, bg = ui.bg },
+            VertSplit = { fg = ui.border, bg = ui.bg },
+            WinSeparator = { fg = ui.border, bg = ui.bg },
+            StatusLine = { fg = ui.fg, bg = ui.panel_alt },
+            StatusLineNC = { fg = ui.muted, bg = ui.panel },
+            TabLine = { fg = ui.muted, bg = ui.panel },
+            TabLineFill = { bg = ui.bg },
+            TabLineSel = { fg = ui.bright, bg = ui.panel_alt, bold = true },
+            Pmenu = { fg = ui.text, bg = ui.panel },
+            PmenuSel = { fg = ui.bright, bg = ui.panel_alt, bold = true },
+            PmenuSbar = { bg = ui.panel_alt },
+            PmenuThumb = { bg = ui.border },
+            Folded = { fg = ui.muted, bg = ui.panel },
+            FoldColumn = { fg = ui.subtle, bg = ui.bg },
+            Visual = { bg = ui.panel_alt },
+            Search = { fg = ui.bg, bg = "#cfcfcf" },
+            IncSearch = { fg = ui.bg, bg = ui.bright },
+            DiagnosticVirtualTextError = { fg = "#b0b0b0", bg = ui.panel },
+            DiagnosticVirtualTextWarn = { fg = "#a0a0a0", bg = ui.panel },
+            DiagnosticVirtualTextInfo = { fg = "#9a9a9a", bg = ui.panel },
+            DiagnosticVirtualTextHint = { fg = "#8c8c8c", bg = ui.panel },
+            WhichKey = { fg = ui.bright },
+            WhichKeyGroup = { fg = ui.text },
+            WhichKeyDesc = { fg = ui.fg },
+            WhichKeySeparator = { fg = ui.subtle },
+            WhichKeyFloat = { bg = ui.panel },
+            SnacksNormal = { fg = ui.fg, bg = ui.panel },
+            SnacksPicker = { fg = ui.fg, bg = ui.panel },
+            SnacksPickerBorder = { fg = ui.border_bright, bg = ui.panel },
+            SnacksPickerInput = { fg = ui.bright, bg = ui.panel_alt },
+            SnacksPickerInputBorder = { fg = ui.border_bright, bg = ui.panel_alt },
+            SnacksPickerTitle = { fg = ui.bright, bg = ui.panel },
+            SnacksNotifierBorderDebug = { fg = ui.border_bright, bg = ui.panel },
+            SnacksNotifierBorderError = { fg = ui.border_bright, bg = ui.panel },
+            SnacksNotifierBorderInfo = { fg = ui.border_bright, bg = ui.panel },
+            SnacksNotifierBorderTrace = { fg = ui.border_bright, bg = ui.panel },
+            SnacksNotifierBorderWarn = { fg = ui.border_bright, bg = ui.panel },
+            NoiceCmdline = { fg = ui.bright, bg = ui.panel_alt },
+            NoiceCmdlinePopup = { fg = ui.bright, bg = ui.panel_alt },
+            NoiceCmdlinePopupBorder = { fg = ui.border_bright, bg = ui.panel_alt },
+            NoiceCmdlineIcon = { fg = ui.bright, bg = ui.panel_alt },
+            NoicePopupmenu = { fg = ui.bright, bg = ui.panel },
+            NoicePopupmenuBorder = { fg = ui.border_bright, bg = ui.panel },
+            TroubleNormal = { fg = ui.fg, bg = ui.panel },
+            TroubleNormalNC = { fg = ui.fg, bg = ui.panel },
+            TroublePreview = { fg = ui.fg, bg = ui.panel },
+            OilDir = { fg = ui.bright, bg = ui.bg, bold = true },
+            OilDirHidden = { fg = ui.text, bg = ui.bg },
+            OilDirIcon = { fg = ui.bright, bg = ui.bg },
+            AlphaHeader = { fg = ui.bright, bg = ui.bg, bold = true },
+            AlphaButtons = { fg = ui.text, bg = ui.bg },
+            AlphaShortcut = { fg = ui.bright, bg = ui.bg, bold = true },
+            AlphaFooter = { fg = ui.muted, bg = ui.bg },
+          }
+
+          for group, opts in pairs(groups) do
+            set_hl(0, group, opts)
+          end
+
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = "oil",
+            callback = function(args)
+              local win = vim.fn.bufwinid(args.buf)
+              if win ~= -1 then
+                vim.api.nvim_set_hl(0, "FloatBorder", { fg = ui.border_bright, bg = ui.panel })
+                vim.wo[win].winhighlight = "FloatBorder:FloatBorder,NormalFloat:NormalFloat"
+              end
+            end,
+          })
         '';
 
         luaConfigRC.lualine-custom = ''
@@ -388,7 +552,7 @@
               section_separators = { left = "", right = "" },
               globalstatus = true,
               disabled_filetypes = {
-                statusline = { "dashboard", "snacks_dashboard", "oil" },
+                statusline = { "dashboard", "alpha", "snacks_dashboard", "oil" },
               },
             },
             sections = {
@@ -407,27 +571,227 @@
         '';
 
         luaConfigRC.extra-plugins = ''
+          package.preload["lazy.stats"] = function()
+            return {
+              stats = function()
+                return {
+                  count = 0,
+                  loaded = 0,
+                  startuptime = 0,
+                }
+              end,
+            }
+          end
+
+          package.preload["lazy.status"] = function()
+            return {
+              has_updates = function()
+                return false
+              end,
+              updates = function()
+                return ""
+              end,
+            }
+          end
+
+          vim.g.mapleader = " "
+          vim.g.maplocalleader = "\\"
+          vim.o.laststatus = 3
+
+          local function map(mode, lhs, rhs, desc, opts)
+            opts = opts or {}
+            opts.desc = desc
+            vim.keymap.set(mode, lhs, rhs, opts)
+          end
+
+          local function command(cmd)
+            return function()
+              vim.cmd(cmd)
+            end
+          end
+
+          local function has(module)
+            local ok = pcall(require, module)
+            return ok
+          end
+
+          local Snacks = require("snacks")
+
+          local function picker(method, opts)
+            return function()
+              local fn = Snacks.picker and Snacks.picker[method]
+              if fn then
+                fn(opts or {})
+              else
+                vim.notify("Snacks picker '" .. method .. "' is unavailable", vim.log.levels.WARN)
+              end
+            end
+          end
+
+          local function trouble(mode)
+            return function()
+              vim.cmd("Trouble " .. mode .. " toggle")
+            end
+          end
+
+          local function trouble_cmd(cmd)
+            return function()
+              vim.cmd(cmd)
+            end
+          end
+
+          local autoformat_global = true
+          local autoformat_buffer = {}
+
+          local function format(buf, injected)
+            buf = buf or vim.api.nvim_get_current_buf()
+            local ok, conform = pcall(require, "conform")
+            if ok then
+              if injected then
+                conform.format({ bufnr = buf, formatters = { "injected" }, timeout_ms = 3000 })
+              else
+                conform.format({ bufnr = buf, timeout_ms = 3000, lsp_format = "fallback" })
+              end
+              return
+            end
+            vim.lsp.buf.format({ bufnr = buf })
+          end
+
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            group = vim.api.nvim_create_augroup("lazyvim-like-format", { clear = true }),
+            callback = function(args)
+              if autoformat_global and autoformat_buffer[args.buf] ~= false then
+                format(args.buf)
+              end
+            end,
+          })
+
+          local function toggle_bool(opt, on, off)
+            local value = vim.opt_local[opt]:get()
+            if value == on then
+              vim.opt_local[opt] = off
+            else
+              vim.opt_local[opt] = on
+            end
+          end
+
+          local function buffer_delete(force)
+            if Snacks.bufdelete then
+              Snacks.bufdelete(0, { force = force or false })
+            else
+              vim.cmd(force and "bdelete!" or "bdelete")
+            end
+          end
+
+          local function toggle_zoom()
+            local win = vim.api.nvim_get_current_win()
+            if vim.t.lazyvim_zoom_win and vim.api.nvim_win_is_valid(vim.t.lazyvim_zoom_win) then
+              vim.cmd(vim.t.lazyvim_zoom_restore)
+              vim.t.lazyvim_zoom_win = nil
+              vim.t.lazyvim_zoom_restore = nil
+            else
+              vim.t.lazyvim_zoom_win = win
+              vim.t.lazyvim_zoom_restore = vim.fn.winrestcmd()
+              vim.cmd("wincmd |")
+              vim.cmd("wincmd _")
+            end
+          end
+
+          require("mini.icons").setup({})
+
           require("smear_cursor").setup({
             stiffness = 0.8,
             trailing_stiffness = 0.5,
             distance_stop_animating = 0.5,
           })
 
-          require("mini.pairs").setup()
-          require("mini.ai").setup()
+          require("mini.pairs").setup({
+            modes = { insert = true, command = true, terminal = false },
+            skip_next = [=[[%w%%%'%[%%"%.%`%$]]=],
+            skip_ts = { "string" },
+            skip_unbalanced = true,
+            markdown = true,
+          })
+          require("mini.ai").setup({ n_lines = 500 })
+          require("mini.surround").setup()
+          require("Comment").setup()
+          require("ts-comments").setup()
 
-          vim.g.opencode_opts = {}
+          require("flash").setup({})
+          require("trouble").setup({
+            modes = {
+              lsp = {
+                win = { position = "right" },
+              },
+            },
+          })
+          require("todo-comments").setup({})
+          require("persistence").setup({})
+          require("grug-far").setup({ headerMaxWidth = 80 })
+          require("noice").setup({
+            lsp = {
+              override = {
+                ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                ["vim.lsp.util.stylize_markdown"] = true,
+                ["cmp.entry.get_documentation"] = true,
+              },
+            },
+            routes = {
+              {
+                filter = {
+                  event = "msg_show",
+                  any = {
+                    { find = "%d+L, %d+B" },
+                    { find = "; after #%d+" },
+                    { find = "; before #%d+" },
+                  },
+                },
+                view = "mini",
+              },
+            },
+            presets = {
+              bottom_search = true,
+              command_palette = true,
+              long_message_to_split = true,
+            },
+          })
+          require("conform").setup({
+            default_format_opts = {
+              timeout_ms = 3000,
+              async = false,
+              quiet = false,
+              lsp_format = "fallback",
+            },
+            formatters_by_ft = {
+              lua = { "stylua" },
+              nix = { "alejandra" },
+              python = { "ruff_format" },
+              rust = { "rustfmt" },
+              sh = { "shfmt" },
+              bash = { "shfmt" },
+              zsh = { "shfmt" },
+            },
+            formatters = {
+              injected = { options = { ignore_errors = true } },
+            },
+          })
+          require("lint").linters_by_ft = {
+            python = { "ruff" },
+            sh = { "shellcheck" },
+            bash = { "shellcheck" },
+            zsh = { "shellcheck" },
+          }
+          require("nvim-dap-virtual-text").setup({})
+          require("lazydev").setup({
+            library = {
+              { path = "''${3rd}/luv/library", words = { "vim%.uv" } },
+              { path = "snacks.nvim", words = { "Snacks" } },
+              { path = "nvim-lspconfig", words = { "lspconfig.settings" } },
+            },
+          })
+          require("mason").setup({})
+
           vim.o.autoread = true
-
-          local harpoon = require("harpoon")
-          harpoon:setup()
-
-          vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end, { desc = "Harpoon add" })
-          vim.keymap.set("n", "<leader>h", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon menu" })
-          vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end, { desc = "Harpoon 1" })
-          vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end, { desc = "Harpoon 2" })
-          vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end, { desc = "Harpoon 3" })
-          vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end, { desc = "Harpoon 4" })
 
           local builtin = require("statuscol.builtin")
           require("statuscol").setup({
@@ -471,128 +835,406 @@
             },
           })
 
-          require("fzf-lua").setup({
-            winopts = {
-              height = 0.80,
-              width = 0.85,
-              row = 0.35,
-              col = 0.50,
-              border = "rounded",
-              preview = {
-                border = "rounded",
-                layout = "vertical",
-                vertical = "down:45%",
-              },
-            },
-            fzf_opts = {
-              ["--layout"] = "reverse",
-            },
-            files = {
-              cwd_prompt = false,
-              git_icons = true,
-            },
-            grep = {
-              git_icons = true,
-            },
-          })
-
-          vim.keymap.set({ "n", "x" }, "<leader>oa", function()
-            require("opencode").ask("@this: ", { submit = true })
-          end, { desc = "Ask OpenCode" })
-
-          vim.keymap.set({ "n", "x" }, "<leader>oo", function()
-            require("opencode").select()
-          end, { desc = "OpenCode actions" })
-
-          vim.keymap.set({ "n", "t" }, "<leader>ot", function()
-            require("opencode").toggle()
-          end, { desc = "Toggle OpenCode" })
-
-          vim.keymap.set({ "n", "x" }, "<leader>or", function()
-            return require("opencode").operator("@this ")
-          end, { expr = true, desc = "Send range to OpenCode" })
-
-          vim.keymap.set("n", "<leader>ol", function()
-            return require("opencode").operator("@this ") .. "_"
-          end, { expr = true, desc = "Send line to OpenCode" })
-
           vim.opt.winborder = "rounded"
 
           vim.diagnostic.config({
-            virtual_text = false,
+            virtual_text = {
+              spacing = 4,
+              source = "if_many",
+              prefix = "●",
+            },
             underline = true,
             signs = true,
             severity_sort = true,
             update_in_insert = false,
-            float = {
-              border = "rounded",
-              source = "if_many",
-              focusable = false,
-            },
-          })
-
-          vim.api.nvim_create_autocmd("CursorHold", {
-            callback = function()
-              if vim.fn.mode() ~= "n" then
-                return
-              end
-
-              local line = vim.api.nvim_win_get_cursor(0)[1] - 1
-              local diags = vim.diagnostic.get(0, { lnum = line })
-              if diags and #diags > 0 then
-                vim.diagnostic.open_float(nil, {
-                  scope = "cursor",
-                  border = "rounded",
-                  source = "if_many",
-                  focusable = false,
-                })
-              end
-            end,
           })
 
           local hover_opts = {
             border = "rounded",
-            max_width = 88,
-            max_height = 28,
+            max_width = 64,
+            max_height = 18,
+            focusable = false,
           }
 
-          vim.keymap.set("n", "K", function()
+          local wk = require("which-key")
+          wk.add({
+            { "<leader>a", group = "ai" },
+            { "<leader><tab>", group = "tabs" },
+            { "<leader>b", group = "buffer" },
+            { "<leader>c", group = "code" },
+            { "<leader>d", group = "debug" },
+            { "<leader>dp", group = "profiler" },
+            { "<leader>f", group = "file/find" },
+            { "<leader>g", group = "git" },
+            { "<leader>gh", group = "hunks" },
+            { "<leader>q", group = "quit/session" },
+            { "<leader>s", group = "search" },
+            { "<leader>sn", group = "noice" },
+            { "<leader>u", group = "ui" },
+            { "<leader>x", group = "diagnostics/quickfix" },
+            { "[", group = "prev" },
+            { "]", group = "next" },
+            { "g", group = "goto" },
+            { "gs", group = "surround" },
+          })
+
+          map({ "i", "n", "s" }, "<esc>", function()
+            vim.cmd("noh")
+            return "<esc>"
+          end, "Escape and Clear hlsearch", { expr = true })
+
+          map({ "i", "x", "n", "s" }, "<C-s>", function()
+            vim.cmd("silent! write")
+          end, "Save File")
+
+          map("n", "<C-h>", "<C-w>h", "Go to Left Window")
+          map("n", "<C-j>", "<C-w>j", "Go to Lower Window")
+          map("n", "<C-k>", "<C-w>k", "Go to Upper Window")
+          map("n", "<C-l>", "<C-w>l", "Go to Right Window")
+          map("n", "<C-Up>", command("resize +2"), "Increase Window Height")
+          map("n", "<C-Down>", command("resize -2"), "Decrease Window Height")
+          map("n", "<C-Left>", command("vertical resize -2"), "Decrease Window Width")
+          map("n", "<C-Right>", command("vertical resize +2"), "Increase Window Width")
+
+          map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", "Prev Buffer")
+          map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", "Next Buffer")
+          map("n", "[b", "<cmd>BufferLineCyclePrev<cr>", "Prev Buffer")
+          map("n", "]b", "<cmd>BufferLineCycleNext<cr>", "Next Buffer")
+          map("n", "[B", "<cmd>BufferLineMovePrev<cr>", "Move buffer prev")
+          map("n", "]B", "<cmd>BufferLineMoveNext<cr>", "Move buffer next")
+
+          map("n", "K", function()
             vim.lsp.buf.hover(hover_opts)
-          end, { desc = "LSP hover" })
+          end, "Hover")
+          map("n", "gd", vim.lsp.buf.definition, "Goto Definition")
+          map("n", "gr", vim.lsp.buf.references, "References")
+          map("n", "gI", vim.lsp.buf.implementation, "Goto Implementation")
+          map("n", "gy", vim.lsp.buf.type_definition, "Goto Type Definition")
+          map("n", "gD", vim.lsp.buf.declaration, "Goto Declaration")
+          map("n", "gK", vim.lsp.buf.signature_help, "Signature Help")
+          map("i", "<C-k>", vim.lsp.buf.signature_help, "Signature Help")
+          map({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, "Code Action")
+          map("n", "<leader>cr", vim.lsp.buf.rename, "Rename")
+          map("n", "<leader>cl", command("LspInfo"), "Lsp Info")
+          map("n", "<leader>cd", function()
+            vim.diagnostic.open_float(nil, { border = "rounded", scope = "line" })
+          end, "Line Diagnostics")
+          map("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
+          map("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
+          map("n", "]e", function()
+            vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+          end, "Next Error")
+          map("n", "[e", function()
+            vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+          end, "Prev Error")
+          map("n", "]w", function()
+            vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })
+          end, "Next Warning")
+          map("n", "[w", function()
+            vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })
+          end, "Prev Warning")
 
-          vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Goto definition" })
-          vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Goto declaration" })
-          vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "References" })
-          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "Goto implementation" })
-          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
-          vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+          map({ "n", "x" }, "s", function() require("flash").jump() end, "Flash")
+          map({ "n", "o", "x" }, "S", function() require("flash").treesitter() end, "Flash Treesitter")
+          map("o", "r", function() require("flash").remote() end, "Remote Flash")
+          map({ "o", "x" }, "R", function() require("flash").treesitter_search() end, "Treesitter Search")
+          map("c", "<C-s>", function() require("flash").toggle() end, "Toggle Flash Search")
+          map({ "n", "o", "x" }, "<C-Space>", function()
+            require("flash").treesitter({
+              actions = {
+                ["<C-Space>"] = "next",
+                ["<BS>"] = "prev",
+              },
+            })
+          end, "Treesitter Incremental Selection")
 
-          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
-          vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-          vim.keymap.set("n", "<leader>xx", function()
-            vim.diagnostic.open_float(nil, { border = "rounded", scope = "cursor" })
-          end, { desc = "Line diagnostics" })
+          map("n", "<leader><space>", picker("files"), "Find Files (Root Dir)")
+          map("n", "<leader>,", picker("buffers"), "Buffers")
+          map("n", "<leader>/", picker("grep"), "Grep (Root Dir)")
+          map("n", "<leader>:", picker("command_history"), "Command History")
+          map("n", "<leader>.", function() Snacks.scratch() end, "Toggle Scratch Buffer")
+          map("n", "<leader>S", function() Snacks.scratch.select() end, "Select Scratch Buffer")
+          map("n", "<leader>e", function() require("oil").open_float() end, "Explorer")
+          map("n", "<leader>E", function() require("oil").open() end, "Explorer (cwd)")
+          map("n", "<leader>ff", picker("files"), "Find Files (Root Dir)")
+          map("n", "<leader>fF", picker("files", { cwd = false }), "Find Files (cwd)")
+          map("n", "<leader>fg", picker("git_files"), "Find Files (git-files)")
+          map("n", "<leader>fr", picker("recent"), "Recent")
+          map("n", "<leader>fR", picker("recent", { filter = { cwd = true } }), "Recent (cwd)")
+          map("n", "<leader>fb", picker("buffers"), "Buffers")
+          map("n", "<leader>fB", picker("buffers", { all = true }), "Buffers (all)")
+          map("n", "<leader>fc", picker("files", { cwd = vim.fn.stdpath("config") }), "Find Config File")
+          map("n", "<leader>fe", function() require("oil").open_float() end, "Explorer")
+          map("n", "<leader>fE", function() require("oil").open() end, "Explorer (cwd)")
+          map("n", "<leader>fp", picker("projects"), "Projects")
+          map("n", "<leader>fT", function() Snacks.terminal(nil, { cwd = vim.loop.cwd() }) end, "Terminal (cwd)")
+          map("n", "<leader>ft", function() Snacks.terminal() end, "Terminal (Root Dir)")
+          map("n", "-", function() require("oil").open_float() end, "Oil")
+          map({ "n", "t" }, "<C-/>", function() Snacks.terminal() end, "Terminal (Root Dir)")
+          map({ "n", "t" }, "<C-_>", function() Snacks.terminal() end, "which_key_ignore")
 
-          vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })
-          vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
-          vim.keymap.set("n", "<leader>fb", "<cmd>FzfLua buffers<cr>", { desc = "Buffers" })
-          vim.keymap.set("n", "<leader>fr", "<cmd>FzfLua oldfiles<cr>", { desc = "Recent files" })
-          vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua help_tags<cr>", { desc = "Help tags" })
-          vim.keymap.set("n", "<leader>fc", "<cmd>FzfLua commands<cr>", { desc = "Commands" })
+          map("n", "<leader>sg", picker("grep"), "Grep (Root Dir)")
+          map("n", "<leader>sG", picker("grep", { cwd = false }), "Grep (cwd)")
+          map({ "n", "x" }, "<leader>sw", picker("grep_word"), "Visual selection or word (Root Dir)")
+          map({ "n", "x" }, "<leader>sW", picker("grep_word", { cwd = false }), "Visual selection or word (cwd)")
+          map("n", "<leader>sb", picker("lines"), "Buffer Lines")
+          map("n", "<leader>sB", picker("grep_buffers"), "Grep Open Buffers")
+          map("n", "<leader>sc", picker("command_history"), "Command History")
+          map("n", "<leader>sC", picker("commands"), "Commands")
+          map("n", "<leader>sd", picker("diagnostics"), "Diagnostics")
+          map("n", "<leader>sD", picker("diagnostics_buffer"), "Buffer Diagnostics")
+          map("n", "<leader>sh", picker("help"), "Help Pages")
+          map("n", "<leader>sH", picker("highlights"), "Highlights")
+          map("n", "<leader>sj", picker("jumps"), "Jumps")
+          map("n", "<leader>sk", picker("keymaps"), "Keymaps")
+          map("n", "<leader>sl", picker("loclist"), "Location List")
+          map("n", "<leader>sm", picker("marks"), "Marks")
+          map("n", "<leader>sq", picker("qflist"), "Quickfix List")
+          map("n", "<leader>sR", picker("resume"), "Resume")
+          map("n", "<leader>sr", function()
+            require("grug-far").open({
+              transient = true,
+              prefills = {
+                filesFilter = (vim.bo.buftype == "" and vim.fn.expand("%:e") ~= "") and ("*." .. vim.fn.expand("%:e")) or nil,
+              },
+            })
+          end, "Search and Replace")
+          map("n", "<leader>s\"", picker("registers"), "Registers")
+          map("n", "<leader>s/", picker("search_history"), "Search History")
+          map("n", "<leader>ss", picker("lsp_symbols"), "LSP Symbols")
+          map("n", "<leader>sS", picker("lsp_workspace_symbols"), "LSP Workspace Symbols")
 
-          vim.keymap.set("n", "-", "<cmd>Oil --float<cr>", { desc = "Oil float" })
-          vim.keymap.set("n", "<leader>o", "<cmd>Oil --float<cr>", { desc = "Oil float" })
-          vim.keymap.set("n", "<leader>e", "<cmd>Oil --float<cr>", { desc = "Oil float" })
+          map("n", "<leader>gd", picker("git_diff"), "Git Diff (hunks)")
+          map("n", "<leader>gD", "<cmd>DiffviewOpen<cr>", "Git Diff (origin)")
+          map("n", "<leader>gs", picker("git_status"), "Git Status")
+          map("n", "<leader>gL", picker("git_log"), "Git Log (cwd)")
+          map("n", "<leader>gl", picker("git_log_file"), "Git Log")
+          map("n", "<leader>gb", function() require("gitsigns").blame_line({ full = true }) end, "Git Blame Line")
+          map("n", "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", "Git Current File History")
+          map({ "n", "x" }, "<leader>gB", function() vim.ui.open(vim.fn.expand("<cfile>")) end, "Git Browse (open)")
+          map({ "n", "x" }, "<leader>gY", function()
+            vim.fn.setreg("+", vim.fn.expand("<cfile>"))
+          end, "Git Browse (copy)")
 
-          vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Diffview open" })
-          vim.keymap.set("n", "<leader>gD", "<cmd>DiffviewClose<cr>", { desc = "Diffview close" })
+          map("n", "[h", function()
+            if vim.wo.diff then
+              vim.cmd.normal({ "[c", bang = true })
+            else
+              require("gitsigns").nav_hunk("prev")
+            end
+          end, "Prev Hunk")
+          map("n", "]h", function()
+            if vim.wo.diff then
+              vim.cmd.normal({ "]c", bang = true })
+            else
+              require("gitsigns").nav_hunk("next")
+            end
+          end, "Next Hunk")
+          map("n", "[H", function() require("gitsigns").nav_hunk("first") end, "First Hunk")
+          map("n", "]H", function() require("gitsigns").nav_hunk("last") end, "Last Hunk")
+          map({ "n", "x" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
+          map({ "n", "x" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
+          map("n", "<leader>ghS", function() require("gitsigns").stage_buffer() end, "Stage Buffer")
+          map("n", "<leader>ghu", function() require("gitsigns").undo_stage_hunk() end, "Undo Stage Hunk")
+          map("n", "<leader>ghR", function() require("gitsigns").reset_buffer() end, "Reset Buffer")
+          map("n", "<leader>ghp", function() require("gitsigns").preview_hunk_inline() end, "Preview Hunk Inline")
+          map("n", "<leader>ghb", function() require("gitsigns").blame_line({ full = true }) end, "Blame Line")
+          map("n", "<leader>ghB", function() require("gitsigns").blame() end, "Blame Buffer")
+          map("n", "<leader>ghd", function() require("gitsigns").diffthis() end, "Diff This")
+          map("n", "<leader>ghD", function() require("gitsigns").diffthis("~") end, "Diff This ~")
+          map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
 
-          vim.keymap.set("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
-          vim.keymap.set("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
-          vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Close buffer" })
+          map("n", "<leader>xx", trouble("diagnostics"), "Diagnostics (Trouble)")
+          map("n", "<leader>xX", trouble_cmd("Trouble diagnostics toggle filter.buf=0"), "Buffer Diagnostics (Trouble)")
+          map("n", "<leader>cs", trouble("symbols"), "Symbols (Trouble)")
+          map("n", "<leader>cS", trouble("lsp"), "LSP references/definitions/... (Trouble)")
+          map("n", "<leader>xL", trouble("loclist"), "Location List (Trouble)")
+          map("n", "<leader>xQ", trouble("qflist"), "Quickfix List (Trouble)")
+          map("n", "[q", function()
+            if require("trouble").is_open() then
+              require("trouble").prev({ skip_groups = true, jump = true })
+            else
+              vim.cmd.cprev()
+            end
+          end, "Previous Trouble/Quickfix Item")
+          map("n", "]q", function()
+            if require("trouble").is_open() then
+              require("trouble").next({ skip_groups = true, jump = true })
+            else
+              vim.cmd.cnext()
+            end
+          end, "Next Trouble/Quickfix Item")
 
-          vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", { desc = "LSP info" })
-          vim.keymap.set("n", "<leader>lh", "<cmd>checkhealth vim.lsp<cr>", { desc = "LSP health" })
+          map("n", "]t", function() require("todo-comments").jump_next() end, "Next Todo Comment")
+          map("n", "[t", function() require("todo-comments").jump_prev() end, "Previous Todo Comment")
+          map("n", "<leader>xt", "<cmd>Trouble todo toggle<cr>", "Todo (Trouble)")
+          map("n", "<leader>xT", "<cmd>Trouble todo toggle filter={tag={TODO,FIX,FIXME}}<cr>", "Todo/Fix/Fixme (Trouble)")
+          map("n", "<leader>st", picker("todo_comments"), "Todo")
+          map("n", "<leader>sT", picker("todo_comments", { keywords = { "TODO", "FIX", "FIXME" } }), "Todo/Fix/Fixme")
+
+          map("n", "<leader>bd", function() buffer_delete(false) end, "Delete Buffer")
+          map("n", "<leader>bD", function() buffer_delete(true) end, "Delete Buffer and Window")
+          map("n", "<leader>bo", function()
+            local current = vim.api.nvim_get_current_buf()
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+              if vim.api.nvim_buf_is_loaded(buf) and buf ~= current and vim.bo[buf].buflisted then
+                if Snacks.bufdelete then
+                  Snacks.bufdelete(buf)
+                else
+                  vim.cmd("bdelete " .. buf)
+                end
+              end
+            end
+          end, "Delete Other Buffers")
+          map("n", "<leader>bb", "<C-^>", "Switch to Other Buffer")
+          map("n", "<leader>`", "<C-^>", "Switch to Other Buffer")
+          map("n", "<leader>bp", "<cmd>BufferLineTogglePin<cr>", "Toggle Pin")
+          map("n", "<leader>bP", "<cmd>BufferLineGroupClose ungrouped<cr>", "Delete Non-Pinned Buffers")
+          map("n", "<leader>br", "<cmd>BufferLineCloseRight<cr>", "Delete Buffers to the Right")
+          map("n", "<leader>bl", "<cmd>BufferLineCloseLeft<cr>", "Delete Buffers to the Left")
+          map("n", "<leader>bj", "<cmd>BufferLinePick<cr>", "Pick Buffer")
+
+          map("n", "<leader>qs", function() require("persistence").load() end, "Restore Session")
+          map("n", "<leader>qS", function() require("persistence").select() end, "Select Session")
+          map("n", "<leader>ql", function() require("persistence").load({ last = true }) end, "Restore Last Session")
+          map("n", "<leader>qd", function() require("persistence").stop() end, "Don't Save Current Session")
+          map("n", "<leader>qq", command("qa"), "Quit All")
+
+          map("n", "<leader>cf", function() format() end, "Format")
+          map({ "n", "x" }, "<leader>cF", function() format(0, true) end, "Format Injected Langs")
+          map("n", "<leader>cm", command("Mason"), "Mason")
+          map("n", "<leader>cc", function() if vim.lsp.codelens then vim.lsp.codelens.run() end end, "Run Codelens")
+          map("n", "<leader>cC", function() if vim.lsp.codelens then vim.lsp.codelens.refresh() end end, "Refresh & Display Codelens")
+
+          map("n", "<leader>fn", function() vim.cmd("enew") end, "New File")
+          map({ "n", "x" }, "<leader>aa", function()
+            require("opencode").ask("@this: ", { submit = true })
+          end, "Ask OpenCode")
+          map({ "n", "x" }, "<leader>ap", function()
+            require("opencode").select()
+          end, "OpenCode Prompts")
+          map({ "n", "t" }, "<leader>at", function()
+            require("opencode").toggle()
+          end, "Toggle OpenCode")
+          map({ "n", "x" }, "<leader>ar", function()
+            return require("opencode").operator("@this ")
+          end, "Send Selection to OpenCode", { expr = true })
+          map("n", "<leader>al", function()
+            return require("opencode").operator("@this ") .. "_"
+          end, "Send Line to OpenCode", { expr = true })
+          map("n", "<leader>xl", command("lopen"), "Location List")
+          map("n", "<leader>xq", command("copen"), "Quickfix List")
+          map("n", "<leader>?", function() require("which-key").show({ global = false }) end, "Buffer Keymaps (which-key)")
+          map("n", "<C-w><space>", function() require("which-key").show({ keys = "<C-w>", loop = true }) end, "Window Hydra Mode (which-key)")
+          map("n", "<leader>-", "<C-W>s", "Split Window Below")
+          map("n", "<leader>|", "<C-W>v", "Split Window Right")
+          map("n", "<leader>wd", "<C-W>c", "Delete Window")
+          map("n", "<leader>wm", toggle_zoom, "Toggle Zoom Mode")
+          map("n", "<leader>uZ", toggle_zoom, "Toggle Zoom Mode")
+
+          map("n", "<leader>ur", function()
+            vim.cmd("nohlsearch")
+            vim.cmd("diffupdate")
+            vim.cmd("normal! <C-L>")
+          end, "Redraw / Clear hlsearch / Diff Update")
+          map("n", "<leader>us", function() toggle_bool("spell", true, false) end, "Toggle Spelling")
+          map("n", "<leader>uw", function() toggle_bool("wrap", true, false) end, "Toggle Wrap")
+          map("n", "<leader>uL", function() toggle_bool("relativenumber", true, false) end, "Toggle Relative Number")
+          map("n", "<leader>ud", function()
+            if vim.diagnostic.is_enabled() then
+              vim.diagnostic.enable(false)
+            else
+              vim.diagnostic.enable(true)
+            end
+          end, "Toggle Diagnostics")
+          map("n", "<leader>ul", function() toggle_bool("number", true, false) end, "Toggle Line Numbers")
+          map("n", "<leader>uc", function()
+            if vim.wo.conceallevel > 0 then
+              vim.wo.conceallevel = 0
+            else
+              vim.wo.conceallevel = 3
+            end
+          end, "Toggle Conceal Level")
+          map("n", "<leader>uA", function()
+            vim.o.showtabline = (vim.o.showtabline == 0) and 2 or 0
+          end, "Toggle Tabline")
+          map("n", "<leader>uT", function()
+            local ok, ts = pcall(vim.treesitter.start)
+            if ok then
+              if vim.b.lazyvim_ts_disabled then
+                vim.treesitter.start()
+                vim.b.lazyvim_ts_disabled = false
+              else
+                vim.treesitter.stop()
+                vim.b.lazyvim_ts_disabled = true
+              end
+            end
+          end, "Toggle Treesitter Highlight")
+          map("n", "<leader>ub", function()
+            vim.o.background = (vim.o.background == "dark") and "light" or "dark"
+          end, "Toggle Dark Background")
+          map("n", "<leader>uf", function()
+            autoformat_global = not autoformat_global
+            vim.notify("Auto Format (Global): " .. (autoformat_global and "on" or "off"))
+          end, "Toggle Auto Format (Global)")
+          map("n", "<leader>uF", function()
+            local buf = vim.api.nvim_get_current_buf()
+            autoformat_buffer[buf] = not (autoformat_buffer[buf] ~= false)
+            vim.notify("Auto Format (Buffer): " .. ((autoformat_buffer[buf] ~= false) and "on" or "off"))
+          end, "Toggle Auto Format (Buffer)")
+          map("n", "<leader>ug", function()
+            vim.g.snacks_animate = not vim.g.snacks_animate
+            if has("ibl") then
+              local ibl = require("ibl")
+              if vim.g.lazyvim_indent_disabled then
+                ibl.setup_buffer(0, { enabled = true })
+                vim.g.lazyvim_indent_disabled = false
+              else
+                ibl.setup_buffer(0, { enabled = false })
+                vim.g.lazyvim_indent_disabled = true
+              end
+            end
+          end, "Toggle Indent Guides")
+          map("n", "<leader>uh", function()
+            if vim.lsp.inlay_hint then
+              local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = 0 })
+              vim.lsp.inlay_hint.enable(not enabled, { bufnr = 0 })
+            end
+          end, "Toggle Inlay Hints")
+          map("n", "<leader>uG", function() require("gitsigns").toggle_signs() end, "Toggle Git Signs")
+          map("n", "<leader>un", function() Snacks.notifier.hide() end, "Dismiss All Notifications")
+          map("n", "<leader>uz", toggle_zoom, "Toggle Zen Mode")
+
+          map("n", "<leader>n", function()
+            if Snacks.config.picker and Snacks.config.picker.enabled and Snacks.picker.notifications then
+              Snacks.picker.notifications()
+            else
+              Snacks.notifier.show_history()
+            end
+          end, "Notification History")
+          map("c", "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, "Redirect Cmdline")
+          map("n", "<leader>snl", function() require("noice").cmd("last") end, "Noice Last Message")
+          map("n", "<leader>snh", function() require("noice").cmd("history") end, "Noice History")
+          map("n", "<leader>sna", function() require("noice").cmd("all") end, "Noice All")
+          map("n", "<leader>snd", function() require("noice").cmd("dismiss") end, "Dismiss All")
+          map("n", "<leader>snt", function() require("noice").cmd("pick") end, "Noice Picker (Telescope/FzfLua)")
+          map({ "i", "n", "s" }, "<C-f>", function()
+            if not require("noice.lsp").scroll(4) then
+              return "<C-f>"
+            end
+          end, "Scroll Forward", { expr = true, silent = true })
+          map({ "i", "n", "s" }, "<C-b>", function()
+            if not require("noice.lsp").scroll(-4) then
+              return "<C-b>"
+            end
+          end, "Scroll Backward", { expr = true, silent = true })
+
+          map("n", "gco", function()
+            require("Comment.api").insert.linewise.below()
+          end, "Add Comment Below")
+          map("n", "gcO", function()
+            require("Comment.api").insert.linewise.above()
+          end, "Add Comment Above")
         '';
       };
     };
