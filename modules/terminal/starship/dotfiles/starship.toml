@@ -89,7 +89,7 @@ format = "([+$added]($added_style) )([-$deleted]($deleted_style) )"
 
 [git_status]
 style = "peach"
-format = "[ | ](overlay0)[$all_status$ahead_behind]($style)"
+format = "([ | ](overlay0)[$all_status$ahead_behind]($style))"
 ahead = "ahead ${count} "
 behind = "behind ${count} "
 diverged = "diverged "
