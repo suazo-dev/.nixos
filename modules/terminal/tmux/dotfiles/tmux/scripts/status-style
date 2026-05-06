@@ -1,34 +1,9 @@
+#!/usr/bin/env bash
 set -euo pipefail
-style="$(tmux show -gv @style 2>/dev/null || echo flat)"
 
-# --- Right-side building blocks (no backslashes around #[...]) ---
-# PATH: icon + smart path (tmux-only; no shell). Width tiers: 120 / 80.
-#RIGHT_PATH='#[bg=#{@SURFACE1},fg=#{@TEXT}] #[bold]#{@icon_folder}#[nobold] #{?#{>=:#{client_width},120},#{s|^#{E:HOME}|~|:pane_current_path},#{?#{>=:#{client_width},80},…/#{b:#{d:pane_current_path}}/#{b:pane_current_path},#{b:pane_current_path}}} '
+PATH_SEG='#(~/.config/tmux/scripts/path-smart #{client_width} "#{pane_current_path}")'
+GIT_SEG='#(BR_ICON="#{@branch_icon}" bash ~/.config/tmux/scripts/git-info "#{pane_current_path}")'
+SESSION_SEG='#(~/.config/tmux/scripts/session-name "#{session_id}" "#{pane_current_path}")'
 
-# PATH: icon + two-width modes via a tiny shell snippet
-
-# PATH: icon + two modes by width (no bare #{client_width} anywhere)
-
-RIGHT_PATH='#[bg=#{@SURFACE1},fg=#{@TEXT}] #[bold]#{@icon_folder}#[nobold] #(~/.config/tmux/scripts/path-smart #{client_width} "#{pane_current_path}") '
-RIGHT_FILE='#(CF_BG="#{@MAUVE}" CF_FG="#{@BACKGROUND}" BAR_BG="#{@SURFACE0}" BAR_FG="#{@TEXT}" ~/.config/tmux/scripts/active-file "#{pane_pid}" "#{pane_current_path}")'
-RIGHT_GIT='#[bg=#{@PEACH},fg=#{@BACKGROUND}] #(BR_ICON="#{@branch_icon}" ~/.config/tmux/scripts/git-info "#{pane_current_path}") '
-RIGHT_PROG='#[bg=#{@BLUE},fg=#{@BACKGROUND}] #{pane_current_command} #[bg=#{@SURFACE0},fg=#{@TEXT}]'
-
-case "$style" in
-flat)
-  tmux set -g status-left '#[bg=#{@SURFACE1},fg=#{@TEXT}] #{?#{==:#S,0},default,#S} #[bg=#{@SURFACE0},fg=#{@TEXT}]'
-  tmux set -g status-right "${RIGHT_PATH}#[bg=#{@SURFACE0},fg=#{@TEXT}]${RIGHT_FILE}#[bg=#{@SURFACE0},fg=#{@TEXT}]${RIGHT_GIT}#[bg=#{@SURFACE0},fg=#{@TEXT}]${RIGHT_PROG}"
-  ;;
-tri)
-  tmux set -g status-left '#[fg=#{@SURFACE1},bg=#{@SURFACE0}]#[fg=#{@TEXT},bg=#{@SURFACE1}]  #{?#{==:#S,0},default,#S}  #[fg=#{@SURFACE0},bg=#{@SURFACE1}]#[fg=#{@TEXT},bg=#{@SURFACE0}]'
-  tmux set -g status-right "#[fg=#{@SURFACE1},bg=#{@SURFACE0}]${RIGHT_PATH}#[fg=#{@MAUVE},bg=#{@SURFACE1}]#[fg=#{@BACKGROUND},bg=#{@MAUVE}] ${RIGHT_FILE} #[fg=#{@PEACH},bg=#{@MAUVE}]${RIGHT_GIT}#[fg=#{@BLUE},bg=#{@PEACH}]${RIGHT_PROG}#[fg=#{@TEXT},bg=#{@SURFACE0}]"
-  ;;
-round)
-  tmux set -g status-left '#[fg=#{@SURFACE1},bg=#{@SURFACE0}]#[fg=#{@TEXT},bg=#{@SURFACE1}]  #{?#{==:#S,0},default,#S}  #[fg=#{@SURFACE1},bg=#{@SURFACE0}]#[fg=#{@TEXT},bg=#{@SURFACE0}]'
-  tmux set -g status-right "#[fg=#{@SURFACE1},bg=#{@SURFACE0}]${RIGHT_PATH}#[fg=#{@SURFACE1},bg=#{@SURFACE0}]#[fg=#{@MAUVE},bg=#{@SURFACE0}]#[fg=#{@BACKGROUND},bg=#{@MAUVE}] ${RIGHT_FILE} #[fg=#{@SURFACE0},bg=#{@MAUVE}]#[fg=#{@PEACH},bg=#{@SURFACE0}]${RIGHT_GIT}#[fg=#{@SURFACE0},bg=#{@PEACH}]#[fg=#{@BLUE},bg=#{@SURFACE0}]${RIGHT_PROG}#[fg=#{@SURFACE0},bg=#{@BLUE}]#[fg=#{@TEXT},bg=#{@SURFACE0}]"
-  ;;
-*)
-  tmux display-message "Unknown @style '$style' (use flat|tri|round)"
-  exit 1
-  ;;
-esac
+tmux set -g status-left "#[fg=#{@SAPPHIRE},bold] 󰍹 #H #[fg=#{@OVERLAY0}] | #[fg=#{@PINK}] ${SESSION_SEG} "
+tmux set -g status-right "#[fg=#{@SURFACE2}] #{@icon_folder} ${PATH_SEG} #{?#{!=:${GIT_SEG},},#[fg=#{@OVERLAY0}] | #[fg=#{@PEACH}] ${GIT_SEG} ,}#[fg=#{@OVERLAY0}] | #[fg=#{@ROSEWATER}]  %H:%M "

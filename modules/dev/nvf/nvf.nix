@@ -19,8 +19,8 @@
     gotestsum
     lldb
     python313Packages.debugpy
-    python313Packages.pytest
     ruff
+    uv
     cargo
     rustc
     rust-analyzer
@@ -89,8 +89,38 @@
           mini-surround = {
             package = pkgs.vimPlugins.mini-surround;
           };
-          statuscol = {
-            package = pkgs.vimPlugins.statuscol-nvim;
+          mini-move = {
+            package = pkgs.vimPlugins.mini-move;
+          };
+          mini-operators = {
+            package = pkgs.vimPlugins.mini-operators;
+          };
+          mini-splitjoin = {
+            package = pkgs.vimPlugins.mini-splitjoin;
+          };
+          mini-bracketed = {
+            package = pkgs.vimPlugins.mini-bracketed;
+          };
+          mini-animate = {
+            package = pkgs.vimPlugins.mini-animate;
+          };
+          mini-align = {
+            package = pkgs.vimPlugins.mini-align;
+          };
+          mini-hipatterns = {
+            package = pkgs.vimPlugins.mini-hipatterns;
+          };
+          mini-trailspace = {
+            package = pkgs.vimPlugins.mini-trailspace;
+          };
+          mini-visits = {
+            package = pkgs.vimPlugins.mini-visits;
+          };
+          harpoon2 = {
+            package = pkgs.vimPlugins.harpoon2;
+          };
+          hardtime = {
+            package = pkgs.vimPlugins.hardtime-nvim;
           };
           diffview = {
             package = pkgs.vimPlugins.diffview-nvim;
@@ -98,8 +128,8 @@
           lualine = {
             package = pkgs.vimPlugins.lualine-nvim;
           };
-          oil = {
-            package = pkgs.vimPlugins.oil-nvim;
+          mini-files = {
+            package = pkgs.vimPlugins.mini-files;
           };
           flash = {
             package = pkgs.vimPlugins.flash-nvim;
@@ -109,12 +139,6 @@
           };
           todo-comments = {
             package = pkgs.vimPlugins.todo-comments-nvim;
-          };
-          persistence = {
-            package = pkgs.vimPlugins.persistence-nvim;
-          };
-          noice = {
-            package = pkgs.vimPlugins.noice-nvim;
           };
           conform = {
             package = pkgs.vimPlugins.conform-nvim;
@@ -128,8 +152,11 @@
           project = {
             package = pkgs.vimPlugins.project-nvim;
           };
-          comment = {
-            package = pkgs.vimPlugins.comment-nvim;
+          mini-comment = {
+            package = pkgs.vimPlugins.mini-comment;
+          };
+          mini-sessions = {
+            package = pkgs.vimPlugins.mini-sessions;
           };
           lazydev = {
             package = pkgs.vimPlugins.lazydev-nvim;
@@ -176,9 +203,6 @@
           undotree = {
             package = pkgs.vimPlugins.undotree;
           };
-          lazygit = {
-            package = pkgs.vimPlugins.lazygit-nvim;
-          };
           treesitter-context = {
             package = pkgs.vimPlugins.nvim-treesitter-context;
           };
@@ -190,6 +214,9 @@
           };
           render-markdown = {
             package = pkgs.vimPlugins.render-markdown-nvim;
+          };
+          noice = {
+            package = pkgs.vimPlugins.noice-nvim;
           };
           rustaceanvim = {
             package = pkgs.vimPlugins.rustaceanvim;
@@ -364,9 +391,16 @@
               scope.enabled = true;
               scroll.enabled = true;
               words.enabled = true;
-              terminal.enabled = true;
+              terminal = {
+                enabled = true;
+                win.bo.buflisted = false;
+              };
               toggle.enabled = true;
               zen.enabled = true;
+              statuscolumn.enabled = true;
+              lazygit.enabled = true;
+              dim.enabled = true;
+              rename.enabled = true;
             };
           };
 
@@ -483,9 +517,9 @@
             dashboard.button("f", "  Find File", "<cmd>lua require('snacks').picker.files()<cr>"),
             dashboard.button("g", "  Find Text", "<cmd>lua require('snacks').picker.grep()<cr>"),
             dashboard.button("r", "  Recent Files", "<cmd>lua require('snacks').picker.recent()<cr>"),
-            dashboard.button("e", "  Explorer", "<cmd>lua require('oil').open_float()<cr>"),
+            dashboard.button("e", "  Explorer", "<cmd>lua require('mini.files').open()<cr>"),
             dashboard.button("c", "  Config", "<cmd>lua require('snacks').picker.files({ cwd = vim.fn.stdpath('config') })<cr>"),
-            dashboard.button("s", "  Restore Session", "<cmd>lua require('persistence').load()<cr>"),
+            dashboard.button("s", "  Restore Session", "<cmd>lua require('mini.sessions').read()<cr>"),
             dashboard.button("q", "  Quit", "<cmd>qa<cr>"),
           }
 
@@ -619,7 +653,7 @@
           end
 
           vim.api.nvim_create_autocmd("FileType", {
-            pattern = "oil",
+            pattern = "minifiles",
             callback = function(args)
               local win = vim.fn.bufwinid(args.buf)
               if win ~= -1 then
@@ -747,7 +781,7 @@
               section_separators = { left = "", right = "" },
               globalstatus = true,
               disabled_filetypes = {
-                statusline = { "dashboard", "alpha", "snacks_dashboard", "oil" },
+                statusline = { "dashboard", "alpha", "snacks_dashboard", "minifiles" },
               },
             },
             sections = {
@@ -812,6 +846,9 @@
 
           local Snacks = require("snacks")
           local uv = vim.uv or vim.loop
+          Snacks.config.terminal = vim.tbl_deep_extend("force", Snacks.config.terminal or {}, {
+            win = { bo = { buflisted = false } },
+          })
 
           local function picker(method, opts)
             return function()
@@ -925,8 +962,6 @@
           })
           require("mini.ai").setup({ n_lines = 500 })
           require("mini.surround").setup()
-          require("Comment").setup()
-
           require("flash").setup({})
           require("trouble").setup({
             modes = {
@@ -936,7 +971,30 @@
             },
           })
           require("todo-comments").setup({})
-          require("persistence").setup({})
+          require("mini.comment").setup({})
+          require("mini.move").setup({})
+          require("mini.operators").setup({})
+          require("mini.splitjoin").setup({})
+          require("mini.bracketed").setup({})
+          require("mini.animate").setup({
+            open = { enable = false },
+            close = { enable = false },
+          })
+          require("mini.align").setup({})
+          require("mini.trailspace").setup({})
+          require("mini.visits").setup({})
+          require("mini.hipatterns").setup({
+            highlighters = {
+              hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
+            },
+          })
+          require("harpoon"):setup({})
+          require("hardtime").setup({ enabled = true })
+          require("mini.sessions").setup({
+            autoread = false,
+            autowrite = true,
+            directory = vim.fn.stdpath("data") .. "/sessions",
+          })
           require("grug-far").setup({ headerMaxWidth = 80 })
           require("project").setup({
             manual_mode = false,
@@ -1022,6 +1080,7 @@
               long_message_to_split = true,
             },
           })
+
           require("conform").setup({
             default_format_opts = {
               timeout_ms = 3000,
@@ -1068,15 +1127,7 @@
           vim.o.foldlevelstart = 99
           vim.o.foldenable = true
 
-          local builtin = require("statuscol.builtin")
-          require("statuscol").setup({
-            relculright = true,
-            segments = {
-              { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
-              { text = { "%s" }, click = "v:lua.ScSa" },
-              { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
-            },
-          })
+          require("snacks").statuscolumn.setup()
 
           require("render-markdown").setup({
             enabled = true,
@@ -1187,46 +1238,33 @@
           dap.configurations.c = lldb_config
           dap.configurations.cpp = lldb_config
 
-          require("oil").setup({
-            default_file_explorer = false,
-            columns = { "icon" },
-            delete_to_trash = true,
-            skip_confirm_for_simple_edits = true,
-            prompt_save_on_select_new_entry = true,
-            view_options = {
-              show_hidden = true,
+          require("mini.files").setup({
+            windows = {
+              preview = true,
+              width_focus = 30,
+              width_preview = 50,
             },
-            float = {
-              padding = 2,
-              max_width = 100,
-              max_height = 30,
-              border = "rounded",
-              win_options = {
-                winblend = 0,
-              },
-            },
-            keymaps = {
-              ["<Esc>"] = { "actions.close", mode = "n" },
-              ["q"] = "actions.close",
-              ["<CR>"] = "actions.select",
-              ["-"] = "actions.parent",
-              ["_"] = "actions.open_cwd",
-              ["g."] = "actions.toggle_hidden",
+            options = {
+              use_as_default_explorer = false,
+              permanent_delete = false,
             },
           })
 
           vim.opt.winborder = "rounded"
 
           vim.diagnostic.config({
-            virtual_text = {
-              spacing = 4,
-              source = "if_many",
-              prefix = "●",
-            },
+            virtual_text = false,
+            float = { border = "rounded", source = "if_many" },
             underline = true,
             signs = true,
             severity_sort = true,
             update_in_insert = false,
+          })
+
+          vim.api.nvim_create_autocmd("CursorHold", {
+            callback = function()
+              vim.diagnostic.open_float(nil, { focus = false })
+            end,
           })
 
           local hover_opts = {
@@ -1264,6 +1302,7 @@
           wk.add({
             { "<leader><tab>", group = "tabs" },
             { "<leader>b", group = "buffer" },
+            { "<leader>h", group = "harpoon" },
             { "<leader>c", group = "code" },
             { "<leader>cp", group = "swap" },
             { "<leader>cR", group = "rust" },
@@ -1314,12 +1353,12 @@
           map("n", "<C-Down>", command("resize -2"), "Decrease Window Height")
           map("n", "<C-Left>", command("vertical resize -2"), "Decrease Window Width")
           map("n", "<C-Right>", command("vertical resize +2"), "Increase Window Width")
-          map("n", "<leader><tab>l", command("tablast"), "Last Tab")
-          map("n", "<leader><tab>f", command("tabfirst"), "First Tab")
-          map("n", "<leader><tab><tab>", command("tabnew"), "New Tab")
-          map("n", "<leader><tab>]", command("tabnext"), "Next Tab")
-          map("n", "<leader><tab>d", command("tabclose"), "Close Tab")
-          map("n", "<leader><tab>[", command("tabprevious"), "Previous Tab")
+          map("n", "<leader><tab>f", "<cmd>BufferLineGoToBuffer 1<cr>", "First Buffer")
+          map("n", "<leader><tab>l", "<cmd>lua require('bufferline').go_to(-1, true)<cr>", "Last Buffer")
+          map("n", "<leader><tab><tab>", "<cmd>enew<cr>", "New Buffer")
+          map("n", "<leader><tab>]", "<cmd>BufferLineCycleNext<cr>", "Next Buffer")
+          map("n", "<leader><tab>[", "<cmd>BufferLineCyclePrev<cr>", "Prev Buffer")
+          map("n", "<leader><tab>d", "<cmd>bd<cr>", "Close Buffer")
 
           map("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", "Prev Buffer")
           map("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", "Next Buffer")
@@ -1379,8 +1418,15 @@
           map("n", "<leader>:", picker("command_history"), "Command History")
           map("n", "<leader>.", function() Snacks.scratch() end, "Toggle Scratch Buffer")
           map("n", "<leader>S", function() Snacks.scratch.select() end, "Select Scratch Buffer")
-          map("n", "<leader>e", function() require("oil").open_float() end, "Explorer")
-          map("n", "<leader>E", function() require("oil").open() end, "Explorer (cwd)")
+          local function mini_files_open(path)
+            local mf = require("mini.files")
+            if not mf.close() then mf.open(path) end
+          end
+          map("n", "<leader>e", function()
+            local path = vim.api.nvim_buf_get_name(0)
+            mini_files_open(vim.fn.filereadable(path) == 1 and path or vim.fn.getcwd())
+          end, "Explorer")
+          map("n", "<leader>E", function() mini_files_open(vim.fn.getcwd()) end, "Explorer (cwd)")
           map("n", "<leader>ff", picker("files"), "Find Files (Root Dir)")
           map("n", "<leader>fF", picker("files", { cwd = false }), "Find Files (cwd)")
           map("n", "<leader>fg", picker("git_files"), "Find Files (git-files)")
@@ -1389,12 +1435,18 @@
           map("n", "<leader>fb", picker("buffers"), "Buffers")
           map("n", "<leader>fB", picker("buffers", { all = true }), "Buffers (all)")
           map("n", "<leader>fc", picker("files", { cwd = vim.fn.stdpath("config") }), "Find Config File")
-          map("n", "<leader>fe", function() require("oil").open_float() end, "Explorer")
-          map("n", "<leader>fE", function() require("oil").open() end, "Explorer (cwd)")
+          map("n", "<leader>fe", function()
+            local path = vim.api.nvim_buf_get_name(0)
+            mini_files_open(vim.fn.filereadable(path) == 1 and path or vim.fn.getcwd())
+          end, "Explorer")
+          map("n", "<leader>fE", function() mini_files_open(vim.fn.getcwd()) end, "Explorer (cwd)")
           map("n", "<leader>fp", picker("projects"), "Projects")
           map("n", "<leader>fT", function() Snacks.terminal(nil, { cwd = vim.loop.cwd() }) end, "Terminal (cwd)")
           map("n", "<leader>ft", function() Snacks.terminal() end, "Terminal (Root Dir)")
-          map("n", "-", function() require("oil").open_float() end, "Oil")
+          map("n", "-", function()
+            local path = vim.api.nvim_buf_get_name(0)
+            mini_files_open(vim.fn.filereadable(path) == 1 and path or vim.fn.getcwd())
+          end, "Explorer")
           map({ "n", "t" }, "<C-/>", function() Snacks.terminal() end, "Terminal (Root Dir)")
           map({ "n", "t" }, "<C-_>", function() Snacks.terminal() end, "which_key_ignore")
 
@@ -1436,8 +1488,8 @@
           map("n", "<leader>gl", picker("git_log_file"), "Git Log")
           map("n", "<leader>gb", function() require("gitsigns").blame_line({ full = true }) end, "Git Blame Line")
           map("n", "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", "Git Current File History")
-          map("n", "<leader>gg", command("LazyGit"), "LazyGit")
-          map({ "n", "x" }, "<leader>gB", function() vim.ui.open(vim.fn.expand("<cfile>")) end, "Git Browse (open)")
+          map("n", "<leader>gg", function() Snacks.lazygit() end, "LazyGit")
+          map({ "n", "x" }, "<leader>gB", function() Snacks.gitbrowse() end, "Git Browse")
           map({ "n", "x" }, "<leader>gY", function()
             vim.fn.setreg("+", vim.fn.expand("<cfile>"))
           end, "Git Browse (copy)")
@@ -1498,6 +1550,14 @@
           map("n", "<leader>st", picker("todo_comments"), "Todo")
           map("n", "<leader>sT", picker("todo_comments", { keywords = { "TODO", "FIX", "FIXME" } }), "Todo/Fix/Fixme")
 
+          local harpoon = require("harpoon")
+          map("n", "<leader>ha", function() harpoon:list():add() end, "Harpoon Add")
+          map("n", "<leader>hh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, "Harpoon Menu")
+          map("n", "<leader>1", function() harpoon:list():select(1) end, "Harpoon 1")
+          map("n", "<leader>2", function() harpoon:list():select(2) end, "Harpoon 2")
+          map("n", "<leader>3", function() harpoon:list():select(3) end, "Harpoon 3")
+          map("n", "<leader>4", function() harpoon:list():select(4) end, "Harpoon 4")
+
           map("n", "<leader>bd", function() buffer_delete(false) end, "Delete Buffer")
           map("n", "<leader>bD", function() buffer_delete(true) end, "Delete Buffer and Window")
           map("n", "<leader>bo", function()
@@ -1520,10 +1580,10 @@
           map("n", "<leader>bl", "<cmd>BufferLineCloseLeft<cr>", "Delete Buffers to the Left")
           map("n", "<leader>bj", "<cmd>BufferLinePick<cr>", "Pick Buffer")
 
-          map("n", "<leader>qs", function() require("persistence").load() end, "Restore Session")
-          map("n", "<leader>qS", function() require("persistence").select() end, "Select Session")
-          map("n", "<leader>ql", function() require("persistence").load({ last = true }) end, "Restore Last Session")
-          map("n", "<leader>qd", function() require("persistence").stop() end, "Don't Save Current Session")
+          map("n", "<leader>qs", function() require("mini.sessions").read() end, "Restore Session")
+          map("n", "<leader>qS", function() require("mini.sessions").select() end, "Select Session")
+          map("n", "<leader>ql", function() require("mini.sessions").read() end, "Restore Last Session")
+          map("n", "<leader>qd", function() require("mini.sessions").stop_autosave() end, "Don't Save Current Session")
           map("n", "<leader>qq", command("qa"), "Quit All")
           map("n", "<leader>oO", command("Outline"), "Outline")
           map("n", "<leader>oo", function() require("overseer").toggle() end, "Task List")
@@ -1669,6 +1729,20 @@
           map("n", "<leader>uG", function() require("gitsigns").toggle_signs() end, "Toggle Git Signs")
           map("n", "<leader>un", function() Snacks.notifier.hide() end, "Dismiss All Notifications")
           map("n", "<leader>uz", function() Snacks.zen() end, "Toggle Zen Mode")
+          map("n", "<leader>uD", function() Snacks.dim() end, "Toggle Dim")
+          map("n", "<leader>ut", function() require("mini.trailspace").trim() end, "Trim Trailing Whitespace")
+          map("n", "<leader>fr", function() Snacks.rename.rename_file() end, "Rename File")
+          map("c", "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, "Redirect Cmdline")
+          map("n", "<leader>snl", function() require("noice").cmd("last") end, "Noice Last Message")
+          map("n", "<leader>snh", function() require("noice").cmd("history") end, "Noice History")
+          map("n", "<leader>sna", function() require("noice").cmd("all") end, "Noice All")
+          map("n", "<leader>snd", function() require("noice").cmd("dismiss") end, "Dismiss All")
+          map("n", "<C-f>", function()
+            if not require("noice.lsp").scroll(4) then return "<C-f>" end
+          end, "Scroll Forward", { expr = true, silent = true })
+          map("n", "<C-b>", function()
+            if not require("noice.lsp").scroll(-4) then return "<C-b>" end
+          end, "Scroll Backward", { expr = true, silent = true })
 
           map("n", "<leader>n", function()
             if Snacks.config.picker and Snacks.config.picker.enabled and Snacks.picker.notifications then
@@ -1677,28 +1751,20 @@
               Snacks.notifier.show_history()
             end
           end, "Notification History")
-          map("c", "<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, "Redirect Cmdline")
-          map("n", "<leader>snl", function() require("noice").cmd("last") end, "Noice Last Message")
-          map("n", "<leader>snh", function() require("noice").cmd("history") end, "Noice History")
-          map("n", "<leader>sna", function() require("noice").cmd("all") end, "Noice All")
-          map("n", "<leader>snd", function() require("noice").cmd("dismiss") end, "Dismiss All")
-          map("n", "<leader>snt", function() require("noice").cmd("pick") end, "Noice Picker (Telescope/FzfLua)")
-          map("n", "<C-f>", function()
-            if not require("noice.lsp").scroll(4) then
-              return "<C-f>"
-            end
-          end, "Scroll Forward", { expr = true, silent = true })
-          map("n", "<C-b>", function()
-            if not require("noice.lsp").scroll(-4) then
-              return "<C-b>"
-            end
-          end, "Scroll Backward", { expr = true, silent = true })
 
           map("n", "gco", function()
-            require("Comment.api").insert.linewise.below()
+            local row = vim.api.nvim_win_get_cursor(0)[1]
+            vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
+            vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+            require("mini.comment").toggle_lines(row + 1, row + 1)
+            vim.schedule(function() vim.cmd("startinsert!") end)
           end, "Add Comment Below")
           map("n", "gcO", function()
-            require("Comment.api").insert.linewise.above()
+            local row = vim.api.nvim_win_get_cursor(0)[1] - 1
+            vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
+            vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+            require("mini.comment").toggle_lines(row + 1, row + 1)
+            vim.schedule(function() vim.cmd("startinsert!") end)
           end, "Add Comment Above")
         '';
       };

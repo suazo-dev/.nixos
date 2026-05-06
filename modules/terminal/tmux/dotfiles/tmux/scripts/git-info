@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # git-info <DIR>
-# Outputs: "<icon> <branch>  [↑N] [↓M] [+a] [~m] [-d]" (only counts >0 shown)
+# Outputs: "<icon> <branch> [↑N] [↓M] [+a] [~m] [-d]" (only counts >0 shown)
 # No tmux color codes here (wrapper colors it). No trailing spaces.
 
 set -euo pipefail
 dir="${1:-.}"
 git -C "$dir" rev-parse --is-inside-work-tree &>/dev/null || exit 0
 
-BR_ICON=${BR_ICON:-""}
-ADD_ICON=${ADD_ICON:-"+"}
-MOD_ICON=${MOD_ICON:-"~"}
-DEL_ICON=${DEL_ICON:-"-"}
-AHEAD_ICON=${AHEAD_ICON:-"↑"}
-BEHIND_ICON=${BEHIND_ICON:-"↓"}
+BR_ICON=${BR_ICON:-"󰊢"}
+ADD_ICON=${ADD_ICON:-"󰐕"}
+MOD_ICON=${MOD_ICON:-"󰷫"}
+DEL_ICON=${DEL_ICON:-"󰍴"}
+AHEAD_ICON=${AHEAD_ICON:-"󰜷"}
+BEHIND_ICON=${BEHIND_ICON:-"󰜮"}
 
 # branch or tag or short sha
 branch="$(

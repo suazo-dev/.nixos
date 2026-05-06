@@ -1,7 +1,46 @@
+# PATH
 export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/.pixi/bin:/home/suazo/.pixi/bin:$PATH"
+export GOPATH=/opt/go
+export PATH="$GOPATH/bin:$HOME/.cargo/bin:$HOME/.opencode/bin:/home/suazo/.opencode/bin:$PATH"
+typeset -U path PATH
+
+# Defaults
+export EDITOR="nvim"
+export VISUAL="nvim"
+export GIT_EDITOR="nvim"
+export SUDO_EDITOR="nvim"
+export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+export MANPAGER="nvim +Man!"
+export MANWIDTH=999
 
 [ -f "$HOME/.config/zsh/host-flags.zsh" ] && source "$HOME/.config/zsh/host-flags.zsh"
 
+# Catppuccin Mocha
+if command -v vivid >/dev/null 2>&1; then
+  _vivid_lscolors="$(vivid generate catppuccin-mocha 2>/dev/null)"
+  if [[ -n "$_vivid_lscolors" ]]; then
+    export LS_COLORS="$_vivid_lscolors"
+  fi
+  unset _vivid_lscolors
+fi
+
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#6c7086"
+
+export FZF_DEFAULT_OPTS="
+  --height 40%
+  --layout=reverse
+  --border=rounded
+  --prompt='  '
+  --pointer=''
+  --marker='✓'
+  --color=bg:#1e1e2e,bg+:#313244,fg:#cdd6f4,fg+:#cdd6f4
+  --color=hl:#f38ba8,hl+:#f38ba8,info:#cba6f7,prompt:#cba6f7
+  --color=pointer:#f5e0dc,marker:#a6e3a1,spinner:#f5e0dc,header:#f38ba8
+  --color=border:#45475a
+"
+
+# Starship
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
@@ -14,124 +53,154 @@ if [ ! -d "$ZINIT_HOME" ]; then
   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
-source "${ZINIT_HOME}/zinit.zsh"
+source "$ZINIT_HOME/zinit.zsh"
+
+# Transient prompt -- do not change this
 TRANSIENT_PROMPT_TRANSIENT_PROMPT="%F{74c7ec}%f"
 zinit light olets/zsh-transient-prompt
 
-# Plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
+# Zsh core
+autoload -Uz compinit edit-command-line magic-space zmv select-word-style
+zmodload zsh/complist 2>/dev/null || true
 
-# Snippets
-zinit snippet OMZL::git.zsh
-zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-zinit snippet OMZP::kubectl
-zinit snippet OMZP::kubectx
-zinit snippet OMZP::command-not-found
-
-# Completion
-autoload -Uz compinit
-if [[ "${ZSH_HOST_HEADLESS:-0}" == "1" ]]; then
-  compinit -C
-else
-  compinit
-fi
-zinit cdreplay -q
-
-# Native zsh helpers
-autoload -Uz edit-command-line
-autoload -Uz magic-space
-autoload -Uz add-zsh-hook
-autoload -Uz zmv
-
-# Keybindings
-bindkey -e
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
-bindkey '^[w' kill-region
-bindkey '^x^e' edit-command-line
-bindkey ' ' magic-space
-bindkey '^_' undo
-bindkey '^[r' redo
+select-word-style bash
+WORDCHARS="${WORDCHARS//\/}"
 
 # History
-HISTSIZE=20000
-HISTFILE=~/.zsh_history
-SAVEHIST=$HISTSIZE
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
 HISTDUP=erase
+
 setopt appendhistory
 setopt sharehistory
+setopt inc_append_history
 setopt hist_ignore_space
 setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
+setopt hist_reduce_blanks
 
-# Completion styling
+# Shell behavior
+setopt auto_cd
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt pushd_silent
+setopt extended_glob
+setopt no_case_glob
+setopt complete_in_word
+setopt always_to_end
+
+# Completion style
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -la --color=always $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -la --color=always $realpath'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' list-dirs-first true
+zstyle ':completion:*' squeeze-slashes true
+
+zstyle ':fzf-tab:*' fzf-command fzf
+zstyle ':fzf-tab:*' switch-group '<' '>'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -la --color=always --icons --group-directories-first $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -la --color=always --icons --group-directories-first $realpath'
+
+# Completion init
+zinit light zsh-users/zsh-completions
+
+if [[ "${ZSH_HOST_HEADLESS:-0}" == "1" ]]; then
+  compinit -C
+else
+  compinit
+fi
+
+zinit cdreplay -q
+
+# OMZ snippets without full Oh My Zsh
+zinit snippet OMZL::git.zsh
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::command-not-found
+
+# Better completions
+if command -v carapace >/dev/null 2>&1; then
+  export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+  source <(carapace _carapace)
+fi
+
+# Plugins after compinit
+zinit light Aloxaf/fzf-tab
+
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+zinit light zsh-users/zsh-autosuggestions
+
+if [ -f "$HOME/.config/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh" ]; then
+  source "$HOME/.config/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh"
+fi
+
+zinit light zsh-users/zsh-syntax-highlighting
+
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND="bg=#313244,fg=#cdd6f4,bold"
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND="bg=#f38ba8,fg=#11111b,bold"
+HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+zinit light zsh-users/zsh-history-substring-search
+
+# Keys
+bindkey -e
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey -M emacs '^P' history-substring-search-up
+bindkey -M emacs '^N' history-substring-search-down
+
+[[ -n "${terminfo[kcuu1]}" ]] && bindkey "${terminfo[kcuu1]}" history-substring-search-up
+[[ -n "${terminfo[kcud1]}" ]] && bindkey "${terminfo[kcud1]}" history-substring-search-down
+
+bindkey '^x^e' edit-command-line
+bindkey ' ' magic-space
+bindkey '^[w' kill-region
+bindkey '^_' undo
+bindkey '^[r' redo
+bindkey '^[[C' autosuggest-accept
+bindkey '^[f' autosuggest-forward-word
 
 # Aliases
 alias c='clear'
-alias ls='eza -la'
-alias tree='eza --tree -L 2'
-alias zz='zoxide query -i'
-alias f='fzf'
-alias rg='rg'
 
-# Short commands
+alias v='nvim'
+alias vi='nvim'
+alias vim='nvim'
+alias edit='nvim'
+alias open='nvim'
+
+alias ls='eza -la --icons --group-directories-first'
+alias ll='eza -lah --icons --group-directories-first'
+alias la='eza -la --icons --group-directories-first'
+alias tree='eza --tree -L 2 --icons'
+
+alias cat='bat'
+alias grep='rg'
+alias rg='rg'
+alias f='fzf'
+alias zz='zoxide query -i'
+
+alias lg='lazygit'
+alias top='btop'
+alias df='duf'
+alias ducks='dust'
+alias md='glow'
+alias dns='dog'
+alias bench='hyperfine'
+
+# Repo jumps
 .n() { cd ~/.nixos; }
 .rs() { cd ~/Code; }
 .cmp() { cd ~/.nixos/components; }
 .ft() { cd ~/.nixos/features; }
 .mx() { cd ~/.nixos/machines; }
-.z() { cd ~/.nixos/components/zsh/dotfiles/; }
+.z() { cd ~/.nixos/modules/terminal/zsh/dotfiles/; }
 
-# Rebuild
-rb() {
-  if [[ -z "$1" ]]; then
-    echo "usage: rb <machine>"
-    return 1
-  fi
-  sudo nixos-rebuild switch --flake ~/.nixos#"$1"
-}
-
-# WireGuard helpers
-wgon() {
-  if [[ -z "$1" ]]; then
-    echo "usage: wgon <wg0|wg1>"
-    return 1
-  fi
-  sudo systemctl restart "wg-quick-$1"
-}
-
-wgoff() {
-  if [[ -z "$1" ]]; then
-    echo "usage: wgoff <wg0|wg1>"
-    return 1
-  fi
-  sudo systemctl stop "wg-quick-$1"
-}
-
-alias wg0on='wgon wg0'
-alias wg0off='wgoff wg0'
-alias wg1on='wgon wg1'
-alias wg1off='wgoff wg1'
-
-if [[ "${ZSH_HOST_PORTAL:-0}" == "1" ]]; then
-  alias tinyon='wakeonlan 00:23:24:73:05:91'
-  alias mamaon='wakeonlan c4:65:16:b6:8c:3c'
-  alias sshtiny='ssh suazo@tiny'
-  alias sshmama="ssh -t suazo@mama 'tmux new -As main'"
-fi
-
-# Global aliases
+# Global pipe aliases
 alias -g G='| grep'
 alias -g R='| rg'
 alias -g H='| head'
@@ -140,28 +209,181 @@ alias -g L='| less'
 alias -g C='| wc -l'
 alias -g N='> /dev/null 2>&1'
 
-# Suffix aliases
-alias -s md=nvim
-alias -s txt=nvim
-alias -s log=nvim
-alias -s json=nvim
-alias -s toml=nvim
-alias -s yaml=nvim
-alias -s yml=nvim
-alias -s nix=nvim
-alias -s rs=nvim
-alias -s py=nvim
+# Nix helpers
+rb() {
+  if [[ -z "$1" ]]; then
+    echo "usage: rb <machine>"
+    return 1
+  fi
 
-# Shell integrations
-eval "$(fzf --zsh)"
-eval "$(zoxide init zsh)"
+  sudo nixos-rebuild switch --flake "$HOME/.nixos#$1"
+}
 
-# Path adjustments
+ndev() { nix develop "$@"; }
+nrun() { nix develop -c "$@"; }
+fshow() { nix flake show "$@"; }
+fupdate() { nix flake update "$@"; }
+
+dallow() { direnv allow; }
+dreload() { direnv reload; }
+dstatus() { direnv status; }
+
+# WireGuard helpers
+wgon() {
+  if [[ -z "$1" ]]; then
+    echo "usage: wgon <wg0|wg1>"
+    return 1
+  fi
+
+  sudo systemctl restart "wg-quick-$1"
+}
+
+wgoff() {
+  if [[ -z "$1" ]]; then
+    echo "usage: wgoff <wg0|wg1>"
+    return 1
+  fi
+
+  sudo systemctl stop "wg-quick-$1"
+}
+
+alias wg0on='wgon wg0'
+alias wg0off='wgoff wg0'
+alias wg1on='wgon wg1'
+alias wg1off='wgoff wg1'
+
+# Portal helpers
+if [[ "${ZSH_HOST_PORTAL:-0}" == "1" ]]; then
+  alias tinyon='wakeonlan 00:23:24:73:05:91'
+  alias mamaon='wakeonlan c4:65:16:b6:8c:3c'
+  alias sshtiny='ssh suazo@tiny'
+  alias sshmama="ssh -t suazo@mama 'tmux new -As main'"
+fi
+
+# Fuzzy helpers
+cdf() {
+  local dir
+  dir=$(fd --type d --hidden --exclude .git | fzf) && cd "$dir"
+}
+
+nvf() {
+  local file
+  file=$(fd --type f --hidden --exclude .git | fzf --preview 'bat --style=numbers --color=always {}') && nvim "$file"
+}
+
+rgf() {
+  rg --line-number --hidden --glob "!.git" "$@" | fzf --ansi
+}
+
+gitf() {
+  local file
+  file=$(git ls-files 2>/dev/null | fzf --preview 'bat --style=numbers --color=always {}') && nvim "$file"
+}
+
+gcbf() {
+  local branch
+  branch=$(git branch --all --color=always | sed 's/^[* ] //' | fzf --ansi | sed 's#remotes/origin/##') && git checkout "$branch"
+}
+
+mdf() {
+  local file
+  file=$(fd --extension md --hidden --exclude .git | fzf --preview 'glow {}') && glow "$file"
+}
+
+readme() {
+  if [[ -f README.md ]]; then
+    glow README.md
+  else
+    glow
+  fi
+}
+
+# System helpers
+pathlines() {
+  echo "$PATH" | tr ':' '\n'
+}
+
+biggest() {
+  du -ah "${1:-.}" 2>/dev/null | sort -h | tail -n 30
+}
+
+ips() {
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "missing dependency: jq"
+    return 1
+  fi
+
+  ip -j addr | jq '.[] | {
+    interface: .ifname,
+    state: .operstate,
+    addresses: [.addr_info[]? | { family, local, prefixlen }]
+  }'
+}
+
+ports() {
+  if ! command -v jc >/dev/null 2>&1; then
+    echo "missing dependency: jc"
+    return 1
+  fi
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "missing dependency: jq"
+    return 1
+  fi
+
+  ss -tulpn | jc --ss | jq '.[] | {
+    proto: .netid,
+    local: .local_address,
+    port: .local_port,
+    process: .process_name,
+    pid: .pid
+  }'
+}
+
+compare() {
+  if [[ "$#" -lt 2 ]]; then
+    echo "usage: compare '<cmd1>' '<cmd2>'"
+    return 1
+  fi
+
+  hyperfine "$@"
+}
+
+help() {
+  "$@" --help 2>&1 | bat --plain --language=help
+}
+
+# Nushell
+nush() {
+  if ! command -v nu >/dev/null 2>&1; then
+    echo "nushell is not installed"
+    return 1
+  fi
+
+  echo "Entering Nushell. Type 'exit' to return to Zsh."
+  nu
+}
+
+# Config helpers
+reload() {
+  source ~/.zshrc
+}
+
+zshrc() {
+  nvim ~/.nixos/modules/terminal/zsh/dotfiles/.zshrc
+}
+
+# Integrations
+if command -v fzf >/dev/null 2>&1; then
+  eval "$(fzf --zsh)"
+fi
+
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init zsh --disable-up-arrow --disable-ai)"
+fi
+
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-export PATH="/home/suazo/.pixi/bin:$PATH"
-export GOPATH=/opt/go
-export PATH="$GOPATH/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export STARSHIP_CONFIG="$HOME/.config/starship.toml"
-export PATH="/home/suazo/.opencode/bin:$PATH"
-export PATH="/home/suazo/.cargo/bin:$PATH"

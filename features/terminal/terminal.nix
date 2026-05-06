@@ -1,6 +1,7 @@
 {
   modules = [
     "zsh"
+    "nushell"
     "starship"
     "tmux"
     "yazi"
