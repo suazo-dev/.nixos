@@ -135,10 +135,8 @@ zinit light Aloxaf/fzf-tab
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 zinit light zsh-users/zsh-autosuggestions
 
-if [ -f "$HOME/.config/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh" ]; then
-  source "$HOME/.config/zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh"
-fi
-
+unset ZSH_HIGHLIGHT_STYLES
+unset ZSH_HIGHLIGHT_PATTERNS
 zinit light zsh-users/zsh-syntax-highlighting
 
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND="bg=#313244,fg=#cdd6f4,bold"

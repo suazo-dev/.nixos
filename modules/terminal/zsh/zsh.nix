@@ -21,7 +21,6 @@ in
         export ZSH_HOST_PORTAL=${if hasRole "portal" then "1" else "0"}
         export ZSH_HOST_GATEWAY=${if hasRole "gateway" then "1" else "0"}
       '';
-      "zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh".source = ./dotfiles/catppuccin_mocha-zsh-syntax-highlighting.zsh;
     } // lib.optionalAttrs (hasRole "core") {
       "autostart/org_kde_powerdevil.desktop".text = ''
         [Desktop Entry]

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-session_id="${1:-}"
+name="${1:-}"
 path="${2:-$PWD}"
 
-if [[ -z "$session_id" ]]; then
+if [[ -z "$name" || "$name" =~ ^[0-9]+$ ]]; then
   exit 0
 fi
 
@@ -46,7 +46,7 @@ sanitize_segment() {
     | sed -E 's/^[._-]+//; s/[._-]+$//; s/[.]+/./g'
 }
 
-build_name() {
+build_auto_name() {
   local dir="$1"
   local root rel project leaf
 
@@ -69,30 +69,10 @@ build_name() {
   sanitize_segment "$leaf"
 }
 
-unique_name() {
-  local base="$1"
-  local candidate="$base"
-  local current existing suffix=2
-
-  current="$(tmux display-message -p -t "$session_id" '#{session_name}' 2>/dev/null || true)"
-  while :; do
-    existing="$(tmux list-sessions -F '#{session_name}\t#{session_id}' 2>/dev/null | awk -F '\t' -v name="$candidate" '$1 == name { print $2; exit }')"
-    if [[ -z "$existing" || "$candidate" == "$current" || "$existing" == *":$session_id" ]]; then
-      printf '%s\n' "$candidate"
-      return 0
-    fi
-    candidate="${base}-${suffix}"
-    suffix=$((suffix + 1))
-  done
-}
-
-name="$(build_name "$path")"
-[[ -n "$name" ]] || name="tmux"
-name="$(unique_name "$name")"
-current_name="$(tmux display-message -p -t "$session_id" '#{session_name}' 2>/dev/null || true)"
-
-if [[ -n "$name" && "$name" != "$current_name" ]]; then
-  tmux rename-session -t "$session_id" "$name" >/dev/null 2>&1 || true
+if auto_name="$(build_auto_name "$path" 2>/dev/null)"; then
+  if [[ -n "$auto_name" && "$name" == "$auto_name" ]]; then
+    exit 0
+  fi
 fi
 
 printf '%s' "$name"

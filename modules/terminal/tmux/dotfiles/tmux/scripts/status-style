@@ -1,9 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PATH_SEG='#(~/.config/tmux/scripts/path-smart #{client_width} "#{pane_current_path}")'
-GIT_SEG='#(BR_ICON="#{@branch_icon}" bash ~/.config/tmux/scripts/git-info "#{pane_current_path}")'
-SESSION_SEG='#(~/.config/tmux/scripts/session-name "#{session_id}" "#{pane_current_path}")'
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-tmux set -g status-left "#[fg=#{@SAPPHIRE},bold] 󰍹 #H #[fg=#{@OVERLAY0}] | #[fg=#{@PINK}] ${SESSION_SEG} "
-tmux set -g status-right "#[fg=#{@SURFACE2}] #{@icon_folder} ${PATH_SEG} #{?#{!=:${GIT_SEG},},#[fg=#{@OVERLAY0}] | #[fg=#{@PEACH}] ${GIT_SEG} ,}#[fg=#{@OVERLAY0}] | #[fg=#{@ROSEWATER}]  %H:%M "
+PATH_SEG="#(${SCRIPT_DIR}/path-smart 9999 \"#{pane_current_path}\")"
+BRANCH_SEG="#(${SCRIPT_DIR}/git-branch \"#{pane_current_path}\")"
+
+# 3-line status (top spacer, content, bottom spacer)
+tmux set -g status 3
+
+# Invisible spacer lines (just background)
+SPACER='#[bg=#{@BACKGROUND},fill=#{@BACKGROUND}] '
+tmux set -g "status-format[0]" "$SPACER"
+tmux set -g "status-format[2]" "$SPACER"
+
+# Main content line
+MAIN_FMT="#[bg=#{@BACKGROUND},fill=#{@BACKGROUND}]#[align=left]#{E:status-left}#{W:#{E:window-status-format},#{E:window-status-current-format}}#[align=right]#{E:status-right}"
+tmux set -g "status-format[1]" "$MAIN_FMT"
+
+# Left: hostname
+tmux set -g status-left "  #[fg=#{@SAPPHIRE},bold]#H  "
+
+# Right: path │ branch │ time
+tmux set -g status-right "  #[fg=#{@OVERLAY0}]│  #[fg=#{@OVERLAY1}]${PATH_SEG}#{?#{!=:${BRANCH_SEG},},  #[fg=#{@OVERLAY0}]│  #[fg=#{@GREEN}]${BRANCH_SEG},}  #[fg=#{@OVERLAY0}]│  #[fg=#{@YELLOW}]%H:%M  "
