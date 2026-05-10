@@ -1,6 +1,7 @@
 {
   modules = [
     "claude-code"
+    "pi"
     "nvf"
     "helix"
     "opencode"
