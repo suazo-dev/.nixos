@@ -20,5 +20,7 @@
 
   extraModules = [ ];
 
+  allowedUnfree = [ "claude-code" ];
+
   mutableUsers = true;
 }
